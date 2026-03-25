@@ -45,7 +45,7 @@ export async function getUser(name: string): Promise<User | null> {
   return await decryptData<User>(encrypted, key);
 }
 
-export function getCurrenrUser(): string | null {
+export function getCurrentUser(): string | null {
     return localStorage.getItem('user');
 }
 
