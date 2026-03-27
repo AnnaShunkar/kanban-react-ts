@@ -16,7 +16,7 @@ export type EncryptedPayload = {
     data: number[];
 }
 
-export interface TaskColumn {
+export type TaskColumn = {
   id: string;
   title: string;
   tasks: Task[];

@@ -3,6 +3,11 @@
     --color-main-light: antiquewhite;
     --footer-bg: #030f58;
     --accent-color: #eadfd1;
+    --main-color: antiquewhite;
+    --color-accent: #357ab8;
+    --color-background: #f0f0f0;
+    --box-shadow: #0000001a;
+    --color-main-bg: #846ef4;
 }
 
 @keyframes DecoAnimation {
@@ -18,7 +23,6 @@
 @keyframes TitleAnimation {
     from {
         opacity: 0;
-
     }
 
     to {
@@ -26,13 +30,10 @@
     }
 }
 
-
 /* MAIN */
 body {
     font-family: "Space Grotesk", sans-serif;
     font-optical-sizing: auto;
-
-
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -48,7 +49,6 @@ main {
 }
 
 /* HEADER */
-
 h1 {
     font-size: 40px;
     font-weight: bold;
@@ -77,7 +77,6 @@ header {
 }
 
 /* FOOTER */
-
 footer {
     color: var(--color-main-light);
     padding-top: 30px;
@@ -86,19 +85,14 @@ footer {
     margin-top: auto;
 }
 
-.git-link {
-    text-decoration: none;
-    color: var(--color-main-light);
-}
-
-
-/* INPUT */
-.auth-section{
+/* AUTH */
+.auth-section {
     display: flex;
     flex-direction: row;
     gap: 20px;
     justify-content: center;
 }
+
 .auth-button {
     background: transparent;
     color: var(--accent-color);
@@ -114,10 +108,12 @@ footer {
     background-color: var(--accent-color);
     color: var(--color-body);
 }
-.auth-button.hidden{
+
+.auth-button.hidden {
     display: none;
 }
 
+/* INPUT */
 input {
     background: transparent;
     border: 2px solid var(--accent-color);
@@ -125,6 +121,207 @@ input {
     transition: all 0.3s ease;
 }
 
-input:hover {
+input:hover,
+input:focus {
     background: var(--accent-color);
+    outline: none;
+}
+
+/* WORKSPACES PAGE */
+.workspaces-page,
+.workspace-page {
+    padding: 30px 20px 50px;
+    color: black;
+}
+
+.workspaces-title,
+.workspace-title {
+    margin-bottom: 24px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.workspaces-panel {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: var(--color-main-bg);
+    box-shadow: 0 4px 6px var(--box-shadow);
+}
+
+.workspace-form,
+.column-form,
+.task-form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.workspace-form input,
+.column-form input,
+.task-form input {
+    min-width: 220px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.workspace-form button,
+.column-form button,
+.task-form button {
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: white;
+    background-color: blue;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.workspace-form button:hover,
+.column-form button:hover,
+.task-form button:hover {
+    border: 1px solid blue;
+    color: blue;
+    background-color: white;
+}
+
+.workspace-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.workspace-card {
+    background-color: var(--main-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px var(--box-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workspace-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--box-shadow);
+}
+
+.workspace-link {
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    color: black;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* BOARD */
+.board {
+    display: flex;
+    flex-direction: row;
+    margin: 20px auto 0;
+    justify-content: center;
+    gap: 30px;
+    padding: 30px;
+    box-shadow: 0 4px 6px var(--box-shadow);
+    background-color: var(--color-main-bg);
+    border-radius: 10px;
+    max-width: 1200px;
+    align-items: flex-start;
+    overflow-x: auto;
+}
+
+.board-column {
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px;
+    min-height: 500px;
+    background-color: var(--color-background);
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.board-column h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.board-column:nth-child(1):hover h2 {
+    color: orange;
+}
+
+.board-column:nth-child(2):hover h2 {
+    color: violet;
+}
+
+.board-column:nth-child(3):hover h2 {
+    color: #77c405;
+}
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.task-card {
+    background-color: var(--main-color);
+    border-radius: 6px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 4px var(--box-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-align: left;
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--box-shadow);
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-background);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-accent);
+    border-radius: 10px;
+    border: 2px solid var(--color-background);
+}
+
+@media (max-width: 768px) {
+
+    .workspaces-title,
+    .workspace-title {
+        font-size: 32px;
+    }
+
+    .workspaces-panel {
+        padding: 20px;
+    }
+
+    .board {
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .board-column {
+        min-width: 260px;
+    }
+
+    .auth-section {
+        flex-wrap: wrap;
+    }
 }
