@@ -21,11 +21,13 @@ export default function WorkspacePage() {
             <h1 className="workspace-title">{workspace.title}</h1>
             <AddColumnForm workspaceId={workspace.id} />
             <div className="board">
-                {workspace.columns.map((column) => (
+                {workspace.columns.map((column, index) => (
                     <Column
                         key={column.id}
                         workspaceId={workspace.id}
                         column={column}
+                        columnIndex={index}
+                        totalColumns={workspace.columns.length}
                     />
                 ))}
             </div>
