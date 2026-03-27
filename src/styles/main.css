@@ -93,10 +93,16 @@ footer {
 
 
 /* INPUT */
+.auth-section{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+}
 .auth-button {
     background: transparent;
-    color: var(--color-accent);
-    border: 2px solid var(--color-accent);
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
     border-radius: 6px;
     padding: 8px 16px;
     cursor: pointer;
@@ -105,7 +111,11 @@ footer {
 }
 
 .auth-button:hover {
-    color: var(--accent-color);
+    background-color: var(--accent-color);
+    color: var(--color-body);
+}
+.auth-button.hidden{
+    display: none;
 }
 
 input {

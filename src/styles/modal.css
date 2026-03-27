@@ -1,0 +1,90 @@
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    background: #ffffff;
+    width: 320px;
+    padding: 24px 20px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal h2 {
+    margin: 0 0 20px;
+    font-size: 32px;
+    font-weight: 700;
+    color: #000;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.modal-form input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    background: transparent;
+    color: #000;
+    box-sizing: border-box;
+    outline: none;
+    transition: 0.3s ease;
+}
+
+.modal-form input:hover,
+.modal-form input:focus {
+    background: var(--accent-color);
+}
+
+.modal-form button {
+    cursor: pointer;
+    padding: 10px 16px;
+    width: fit-content;
+    margin: 0 auto;
+    border-radius: 10px;
+    color: white;
+    background-color: blue;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.modal-form button:hover {
+    border: 1px solid blue;
+    color: blue;
+    background-color: white;
+}
+
+.form-error {
+    margin: 0;
+    color: #c62828;
+    font-size: 14px;
+}
+
