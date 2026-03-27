@@ -23,7 +23,7 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
         setWorkspaces((prev) => [...prev, newWorkspace]);
     }
 
-    function addColumn(workspaceId: string, title: string): void {
+    const addColumn = (workspaceId: string, title: string): void => {
         setWorkspaces((prev) => prev.map((workspace) => workspace.id === workspaceId
             ? {
                 ...workspace,
@@ -35,6 +35,7 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
             : workspace)
         );
     }
+
 
     function addTask(workspaceId: string, columnId: string, title: string): void {
         setWorkspaces((prev) =>

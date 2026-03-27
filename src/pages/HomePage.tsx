@@ -16,12 +16,11 @@ export default function HomePage() {
 
     useEffect(() => {
         if (user) {
-            navigate("/workspaces");
+            navigate("/");
         }
     }, [user, navigate]);
 
     return (
-        <>
             <header>
                 <h1>
                     <span className="title-deco">KanBan</span> Board
@@ -61,6 +60,5 @@ export default function HomePage() {
                     <RegisterModal onClose={() => setIsRegisterOpen(false)} />
                 )}
             </header>
-        </>
     );
 }
