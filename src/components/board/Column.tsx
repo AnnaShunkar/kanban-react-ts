@@ -17,11 +17,38 @@ export function Column({
     columnIndex,
     totalColumns,
 }: ColumnProps) {
-    const { moveTask } = useWorkspaces();
+    const { moveTask, moveColumns } = useWorkspaces();
 
     return (
         <div className="board-column">
-            <h2>{column.title}</h2>
+            <div className="column-header">
+                {columnIndex > 0 ? (
+                    <button
+                        type="button"
+                        className="column-move-button"
+                        onClick={() => moveColumns(workspaceId, column.id, "left")}
+                    >
+                        ←
+                    </button>
+                ) : (
+                    <span className="column-move-placeholder" />
+                )}
+
+                <h2>{column.title}</h2>
+
+                {columnIndex < totalColumns - 1 ? (
+                    <button
+                        type="button"
+                        className="column-move-button"
+                        onClick={() => moveColumns(workspaceId, column.id, "right")}
+                    >
+                        →
+                    </button>
+                ) : (
+                    <span className="column-move-placeholder" />
+                )}
+            </div>
+
             <div className="tasks">
                 {column.tasks.map((task) => (
                     <TaskCard

@@ -3,6 +3,7 @@ import { mockWorkspaces } from "../data/mockData";
 import { WorkspacesContext } from "./WorkspacesContext";
 import type { Workspace } from "../types";
 import { moveTask } from "../utils/tasks";
+import { moveColumns } from "../utils/columns";
 
 interface WorkspacesProviderProps {
     children: ReactNode;
@@ -71,10 +72,18 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
             moveTask(prev, workspaceId, taskId, fromColumnId, direction)
         );
     }
-
+    function moveColumnsHandler(
+        workspaceId: string,
+        columnId: string,
+        direction: "left" | "right"
+    ): void {
+        setWorkspaces((prev) =>
+            moveColumns(prev, workspaceId, columnId, direction)
+        );
+    }
     return (
         <WorkspacesContext.Provider
-            value={{ workspaces, getWorkspaceById, addWorkspace, addColumn, addTask, moveTask: moveTaskHandler }}
+            value={{ workspaces, getWorkspaceById, addWorkspace, addColumn, addTask, moveTask: moveTaskHandler, moveColumns: moveColumnsHandler}}
         >
             {children}
         </WorkspacesContext.Provider>

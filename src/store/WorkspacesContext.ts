@@ -13,5 +13,10 @@ export interface WorkspacesContextValue {
         fromColumnId: string,
         direction: "left" | "right"
     ) => void;
+    moveColumns: (
+        workspaceId: string,
+        columnId: string,
+        direction: "left" | "right"
+    ) => void;
 }
 export const WorkspacesContext = createContext<WorkspacesContextValue | null>(null);
