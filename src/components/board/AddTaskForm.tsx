@@ -6,7 +6,7 @@ interface AddTaskFormProps{
     workspaceId: string;
     columnId: string;
 }
-export default function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
+export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
     const { addTask } = useWorkspaces();
     const [title, setTitle] = useState("");
 
@@ -33,4 +33,4 @@ export default function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps)
             </button>
         </form>
     );
-}
+};

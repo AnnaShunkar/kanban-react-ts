@@ -2,7 +2,7 @@ import { useState, type SetStateAction } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
 
-export default function AddWorkspaceForm() {
+export function AddWorkspaceForm() {
     const { addWorkspace } = useWorkspaces();
     const [title, setTitle] = useState("");
     

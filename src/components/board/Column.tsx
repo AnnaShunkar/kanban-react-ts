@@ -1,6 +1,6 @@
 import type { TaskColumn } from "../../types";
-import TaskCard from "./TaskCard";
-import AddTaskForm from "./AddTaskForm";
+import {TaskCard} from "./TaskCard";
+import {AddTaskForm} from "./AddTaskForm";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
 
@@ -11,7 +11,7 @@ interface ColumnProps {
     totalColumns: number;
 }
 
-export default function Column({
+export function Column({
     workspaceId,
     column,
     columnIndex,

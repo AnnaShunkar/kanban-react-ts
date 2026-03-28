@@ -1,11 +1,11 @@
 import "../styles/main.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import LoginModal from "../components/auth/LoginModal";
-import RegisterModal from "../components/auth/RegisterModal";
+import {LoginModal} from "../components/auth/LoginModal";
+import {RegisterModal} from "../components/auth/RegisterModal";
 import { useAuth } from "../hooks/useAuth";
 
-export default function HomePage() {
+export function HomePage() {
     const { user } = useAuth();
     const navigate = useNavigate();
 

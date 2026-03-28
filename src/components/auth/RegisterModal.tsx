@@ -7,7 +7,7 @@ interface RegisterModalProps {
   onClose: () => void;
 }
 
-export default function RegisterModal({ onClose }: RegisterModalProps) {
+export function RegisterModal({ onClose }: RegisterModalProps) {
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -73,4 +73,4 @@ export default function RegisterModal({ onClose }: RegisterModalProps) {
       </div>
     </div>
   );
-}
+};

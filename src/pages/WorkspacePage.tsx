@@ -1,10 +1,10 @@
 import { useParams } from "react-router";
 import { useWorkspaces } from "../hooks/useWorkspaces";
-import Column from "../components/board/Column";
-import AddColumnForm from "../components/board/AddColumnForm";
+import {Column} from "../components/board/Column";
+import {AddColumnForm} from "../components/board/AddColumnForm";
 import "../styles/main.css"
 
-export default function WorkspacePage() {
+export function WorkspacePage() {
     const { workspaceId } = useParams();
     const { getWorkspaceById } = useWorkspaces();
 

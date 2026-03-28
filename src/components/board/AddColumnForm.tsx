@@ -6,7 +6,7 @@ interface AddColumnFormProps{
     workspaceId: string;
 }
 
-export default function AddColumnForm({ workspaceId }: AddColumnFormProps){
+export function AddColumnForm({ workspaceId }: AddColumnFormProps){
     const { addColumn } = useWorkspaces();
     const [title, setTitle] = useState("");
 

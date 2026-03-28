@@ -8,7 +8,7 @@ interface TaskCardProps {
     onMoveRight: () => void;
 }
 
-export default function TaskCard({
+export function TaskCard({
     title,
     canMoveLeft,
     canMoveRight,

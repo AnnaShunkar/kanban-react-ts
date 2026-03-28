@@ -1,5 +1,5 @@
-import AddWorkspaceForm from "../components/workspaces/AddWorkspaceForm";
-import WorkspaceList from "../components/workspaces/WorkspaceList";
+import {AddWorkspaceForm} from "../components/workspaces/AddWorkspaceForm";
+import {WorkspaceList} from "../components/workspaces/WorkspaceList";
 import "../styles/main.css"
 
 export default function WorkspacesPage() {
