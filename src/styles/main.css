@@ -8,6 +8,7 @@
     --color-background: #f0f0f0;
     --box-shadow: #0000001a;
     --color-main-bg: #846ef4;
+    --error-text: #a70606;
 }
 
 @keyframes DecoAnimation {
@@ -53,6 +54,8 @@ h1 {
     font-size: 40px;
     font-weight: bold;
     animation: TitleAnimation 2s;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .title-deco:hover {
@@ -191,6 +194,13 @@ input:focus {
     background-color: white;
 }
 
+.workspace-form,
+.column-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .workspace-list {
     list-style: none;
     margin: 0;
@@ -219,6 +229,11 @@ input:focus {
     color: black;
     font-size: 22px;
     font-weight: 600;
+}
+.error-text{
+    font-size: 12px;
+    margin: 0 auto;
+    color: var(--error-text);
 }
 
 /* BOARD */
@@ -251,18 +266,6 @@ input:focus {
     margin-top: 0;
     margin-bottom: 16px;
     text-align: center;
-}
-
-.board-column:nth-child(1):hover h2 {
-    color: orange;
-}
-
-.board-column:nth-child(2):hover h2 {
-    color: violet;
-}
-
-.board-column:nth-child(3):hover h2 {
-    color: #77c405;
 }
 
 .tasks {

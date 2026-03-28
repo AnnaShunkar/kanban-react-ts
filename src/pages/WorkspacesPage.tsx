@@ -2,7 +2,7 @@ import {AddWorkspaceForm} from "../components/workspaces/AddWorkspaceForm";
 import {WorkspaceList} from "../components/workspaces/WorkspaceList";
 import "../styles/main.css"
 
-export default function WorkspacesPage() {
+export function WorkspacesPage() {
     return (
         <section className="workspaces-page">
             <h1 className="workspaces-title">Workspaces</h1>

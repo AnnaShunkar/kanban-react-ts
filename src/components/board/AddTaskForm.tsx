@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
+import { validTaskTitle } from "../../utils/validation";
 
 interface AddTaskFormProps{
     workspaceId: string;
@@ -9,16 +10,28 @@ interface AddTaskFormProps{
 export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
     const { addTask } = useWorkspaces();
     const [title, setTitle] = useState("");
+    const[error, setError] = useState("");
 
     function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
     event.preventDefault();
-    const trimTitle = title.trim();
+        const validError = validTaskTitle(title);
 
-    if (!trimTitle) {
-      return;
+        if (validError) {
+            setError(validError);
+            return;
         }
-        addTask(workspaceId, columnId, trimTitle);
+        addTask(workspaceId, columnId, title.trim());
         setTitle("");
+    }
+    function handleChange(event: { currentTarget: { value: string; }; }) {
+        const newValue = event.currentTarget.value;
+        setTitle(newValue);
+        const validError = validTaskTitle(newValue);
+        if (validError) {
+            setError(validError);
+        } else {
+            setError("");
+        }
     }
 
     return (
@@ -27,7 +40,8 @@ export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
                 type="text"
                 placeholder="New Task"
                 value={title}
-                onChange={(event) => setTitle(event.currentTarget.value)} />
+                onChange={handleChange} />
+            {error && <p className="error-text">{error}</p>}
             <button type="submit">
                 Add task
             </button>

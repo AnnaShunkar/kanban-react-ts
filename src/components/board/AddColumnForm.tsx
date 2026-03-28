@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
+import { validColumnTitle } from "../../utils/validation";
 
 interface AddColumnFormProps{
     workspaceId: string;
@@ -9,16 +10,30 @@ interface AddColumnFormProps{
 export function AddColumnForm({ workspaceId }: AddColumnFormProps){
     const { addColumn } = useWorkspaces();
     const [title, setTitle] = useState("");
+    const [error, setError] = useState("");
 
     function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
         event.preventDefault();
-        const trimTitle = title.trim();
-        if (!trimTitle) {
+        const validError = validColumnTitle(title);
+
+        if (validError) {
+            setError(validError);
             return;
-        };
-        addColumn(workspaceId, trimTitle);
+        }
+        
+        addColumn(workspaceId, title.trim());
         setTitle("");
     }
+        function handleChange(event: { currentTarget: { value: string; }; }) {
+            const newValue = event.currentTarget.value;
+            setTitle(newValue);
+            const validError = validColumnTitle(newValue);
+            if (validError) {
+                setError(validError);
+            } else {
+                setError("");
+            }
+        }
 
     return (
         <form className="column-form" onSubmit={handleSubmit}>
@@ -26,8 +41,9 @@ export function AddColumnForm({ workspaceId }: AddColumnFormProps){
                 type="text"
                 placeholder="New Column"
                 value={title}
-                onChange={(event) => setTitle(event.currentTarget.value)}
+                onChange={handleChange}
             />
+            {error && <p className="error-text">{error}</p>}
             <button type="submit">Add Column</button>
         </form>
     );
