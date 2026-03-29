@@ -294,7 +294,7 @@ input:focus {
     border-radius: 10px;
     cursor: pointer;
     color: var(--color-body);
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1;
     transition: all 0.2s ease;
 }
@@ -314,8 +314,8 @@ input:focus {
 .task-card {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 10px;
+    justify-content: center;
+    gap: 8px;
     background-color: var(--main-color);
     border-radius: 6px;
     padding: 10px 12px;
@@ -323,14 +323,19 @@ input:focus {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-align: left;
 }
+.task-card-title,
+.task-card input {
+    flex: 1 1 140px;
+    min-width: 0;
+}
+.task-card input {
+        box-sizing: border-box;
+        width: 100%;
+    }
 
 .task-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px var(--box-shadow);
-}
-
-.task-card-title {
-    flex: 1;
 }
 
 .move-button {
@@ -339,15 +344,49 @@ input:focus {
     border-radius: 10px;
     cursor: pointer;
     color: var(--color-body);
-    font-size: 18px;
+    font-size: 12px;
     line-height: 1;
-    padding: 6px 8px;
+    padding: 6px 6px;
     transition: all 0.2s ease;
 }
 
 .move-button:hover {
     background: var(--color-accent);
     color: white;
+}
+
+.edit-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+}
+.e-d-button{
+    background-color: transparent;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        color: var(--color-accent);
+        font-size: 12px;
+}
+.e-d-button:hover{
+    background: var(--color-accent);
+    color: white;
+}
+.workspace-edit {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+.workspace-edit input {
+    min-width: 220px;
+    max-width: 320px;
+    width: 100%;
 }
 
 /* SCROLLBAR */

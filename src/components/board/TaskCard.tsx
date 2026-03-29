@@ -1,6 +1,11 @@
+import { useWorkspaces } from "../../hooks/useWorkspaces";
+import { useState } from "react";
 import "../../styles/main.css"
 
 interface TaskCardProps {
+    workspaceId: string;
+    columnId: string;
+    taskId: string;
     title: string;
     canMoveLeft: boolean;
     canMoveRight: boolean;
@@ -9,22 +14,66 @@ interface TaskCardProps {
 }
 
 export function TaskCard({
+     workspaceId,
+  columnId,
+  taskId,
     title,
     canMoveLeft,
     canMoveRight,
     onMoveLeft,
     onMoveRight,
 }: TaskCardProps) {
+    const { updateTask, deleteTask } = useWorkspaces();
+    const [isEditing, setIsEditing] = useState(false);
+    const [value, setValue] = useState(title);
+
+    function handleSave() {
+    const trimValue = value.trim();
+
+    if (!trimValue) {
+      return;
+    }
+
+    updateTask(workspaceId, columnId, taskId, trimValue);
+    setIsEditing(false);
+  }
     return (
         <div className="task-card">
             {canMoveLeft && (
-                <button type="button" className="move-button" onClick={onMoveLeft}>
+                <button  className="move-button"type="button" onClick={onMoveLeft}>
                     ←
                 </button>
             )}
-            <span className="task-card-title">{title}</span>
+
+            {isEditing ? (
+                <input
+                    value={value}
+                    onChange={(event) => setValue(event.currentTarget.value)}
+                />
+            ) : (
+                <span>{title}</span>
+            )}
+
+            <div>
+                <button  className="e-d-button"
+                type="button"
+                onClick={() =>
+                    isEditing ? handleSave() : setIsEditing(true)
+                }
+            >
+                {isEditing ? "Save" : "Edit"}
+            </button>
+
+            <button className="e-d-button"
+                type="button"
+                onClick={() => deleteTask(workspaceId, columnId, taskId)}
+            >
+                Delete
+            </button>
+            </div>
+
             {canMoveRight && (
-                <button type="button" className="move-button" onClick={onMoveRight}>
+                <button className="move-button" type="button" onClick={onMoveRight}>
                     →
                 </button>
             )}
