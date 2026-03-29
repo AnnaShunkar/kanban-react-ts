@@ -11,7 +11,7 @@ interface WorkspacesProviderProps {
 
 export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     const [workspaces, setWorkspaces] = useState<Workspace[]>(mockWorkspaces);
-
+//WORKSPACES
     function getWorkspaceById(workspaceId: string): Workspace | undefined {
         return workspaces.find((workspace) => workspace.id === workspaceId);
     }
@@ -24,8 +24,18 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
         };
         setWorkspaces((prev) => [...prev, newWorkspace]);
     }
-
-    const addColumn = (workspaceId: string, title: string): void => {
+    function updateWorkspace(workspaceId: string, newTitle: string): void{
+        setWorkspaces((prev) =>
+            prev.map((workspace) => workspace.id === workspaceId
+                ? { ...workspace, title: newTitle }
+                : workspace));
+    }
+    function deleteWorkspace(workspaceId: string): void{
+        setWorkspaces((prev) =>
+            prev.filter((workspace) => workspace.id !== workspaceId));
+    }
+//COLUMNS
+    function addColumn (workspaceId: string, title: string): void {
         setWorkspaces((prev) => prev.map((workspace) => workspace.id === workspaceId
             ? {
                 ...workspace,
@@ -37,8 +47,37 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
             : workspace)
         );
     }
+    function updateColumn(workspaceId: string, columnId: string, newTitle: string): void{
+        setWorkspaces((prev) =>
+            prev.map((workspace) =>
+                workspace.id === workspaceId
+                    ? {
+                        ...workspace,
+                        columns: workspace.columns.map((column) =>
+                            column.id === columnId
+                                ? { ...column, title: newTitle }
+                                : column
+                        ),
+                    }
+                    : workspace
+            ));
+    }
+    function deleteColumn(workspaceId: string, columnId: string): void{
+    setWorkspaces((prev) =>
+      prev.map((workspace) =>
+        workspace.id === workspaceId
+          ? {
+              ...workspace,
+              columns: workspace.columns.filter(
+                (column) => column.id !== columnId
+              ),
+            }
+          : workspace
+      )
+    );
+    }
 
-
+//TASKS 
     function addTask(workspaceId: string, columnId: string, title: string): void {
         setWorkspaces((prev) =>
             prev.map((workspace) =>
@@ -61,7 +100,49 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
             )
         );
     }
-
+    function updateTask(workspaceId: string, columnId: string, taskId: string, newTitle: string): void{
+            setWorkspaces((prev) =>
+      prev.map((workspace) =>
+        workspace.id === workspaceId
+          ? {
+              ...workspace,
+              columns: workspace.columns.map((column) =>
+                column.id === columnId
+                  ? {
+                      ...column,
+                      tasks: column.tasks.map((task) =>
+                        task.id === taskId
+                          ? { ...task, title: newTitle }
+                          : task
+                      ),
+                    }
+                  : column
+              ),
+            }
+          : workspace
+      )
+    );
+    }
+    function deleteTask(workspaceId: string, columnId: string, taskId: string): void{
+            setWorkspaces((prev) =>
+      prev.map((workspace) =>
+        workspace.id === workspaceId
+          ? {
+              ...workspace,
+              columns: workspace.columns.map((column) =>
+                column.id === columnId
+                  ? {
+                      ...column,
+                      tasks: column.tasks.filter((task) => task.id !== taskId),
+                    }
+                  : column
+              ),
+            }
+          : workspace
+      )
+    );
+    }
+//moving for tasks and columns
     function moveTaskHandler(
         workspaceId: string,
         taskId: string,
@@ -83,7 +164,7 @@ export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
     }
     return (
         <WorkspacesContext.Provider
-            value={{ workspaces, getWorkspaceById, addWorkspace, addColumn, addTask, moveTask: moveTaskHandler, moveColumns: moveColumnsHandler}}
+            value={{ workspaces, getWorkspaceById, addWorkspace, updateWorkspace, deleteWorkspace, addColumn, updateColumn, deleteColumn, addTask, updateTask, deleteTask, moveTask: moveTaskHandler, moveColumns: moveColumnsHandler}}
         >
             {children}
         </WorkspacesContext.Provider>
