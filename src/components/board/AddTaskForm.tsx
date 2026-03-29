@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
+import "../../styles/modal.css"
 import { validTaskTitle } from "../../utils/validation";
+import { TextModal } from "../modals/TextModal";
 
 interface AddTaskFormProps{
     workspaceId: string;
@@ -9,42 +11,26 @@ interface AddTaskFormProps{
 }
 export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
     const { addTask } = useWorkspaces();
-    const [title, setTitle] = useState("");
-    const[error, setError] = useState("");
-
-    function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
-    event.preventDefault();
-        const validError = validTaskTitle(title);
-
-        if (validError) {
-            setError(validError);
-            return;
-        }
-        addTask(workspaceId, columnId, title.trim());
-        setTitle("");
-    }
-    function handleChange(event: { currentTarget: { value: string; }; }) {
-        const newValue = event.currentTarget.value;
-        setTitle(newValue);
-        const validError = validTaskTitle(newValue);
-        if (validError) {
-            setError(validError);
-        } else {
-            setError("");
-        }
-    }
+    const [showModal, setShowModal] = useState(false);
 
     return (
-        <form  className="task-form" onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="New Task"
-                value={title}
-                onChange={handleChange} />
-            {error && <p className="error-text">{error}</p>}
-            <button type="submit">
+        <>
+            <button className="add-button" type="button" onClick={() => setShowModal(true)}> 
                 Add task
             </button>
-        </form>
+            {showModal && (
+                <TextModal
+                    title="Add Task"
+                    submitLabel="Add"
+                    placeholder="Task text"
+                    onClose={() => setShowModal(false)}
+                    onSubmit={(taskTitle) => {
+                        addTask(workspaceId, columnId, taskTitle);
+                        setShowModal(false);
+                    }}
+                    validate={validTaskTitle}
+                />
+            )}
+        </>
     );
 };

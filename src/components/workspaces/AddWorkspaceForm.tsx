@@ -1,49 +1,32 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
+import "../../styles/modal.css"
 import { validWorkspaceTitle } from "../../utils/validation";
+import { TextModal } from "../modals/TextModal";
 
 export function AddWorkspaceForm() {
     const { addWorkspace } = useWorkspaces();
-    const [title, setTitle] = useState("");
-    const [error, setError] = useState('');
+    const [showModal, setShowModal] = useState(false);
     
-    function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const validError = validWorkspaceTitle(title);
-
-        if (validError) {
-            setError(validError);
-            return;
-        }
-
-        setError('');
-        addWorkspace(title.trim());
-        setTitle("");
-    }
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const newValue = event.currentTarget.value;
-        setTitle(newValue);
-
-        const validError = validWorkspaceTitle(newValue);
-        if (validError) {
-        setError(validError);
-        } else {
-        setError("");
-        }
-    }
     return (
-        <form className="workspace-form" onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="New Workspace"
-                value={title}
-                onChange={handleChange}
-            />
-            {error && <p className="error-text">{error}</p>}
-            <button type="submit"> 
+        <>
+            <button className="add-button" type="button" onClick={() => setShowModal(true)}> 
                 Add workspace
             </button>
-        </form>
-    )
+            {showModal && (
+                <TextModal
+                    title="Add Workspace"
+                    submitLabel="Add"
+                    placeholder="Workspace title"
+                    onClose={() => setShowModal(false)}
+                    onSubmit={(workspaceTitle) => {
+                        addWorkspace(workspaceTitle);
+                        setShowModal(false);
+                    }}
+                    validate={validWorkspaceTitle}
+                />
+            )}
+        </>
+    );
 }

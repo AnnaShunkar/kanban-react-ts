@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
+import "../../styles/modal.css"
 import { validColumnTitle } from "../../utils/validation";
+import { TextModal } from "../modals/TextModal";
 
 interface AddColumnFormProps{
     workspaceId: string;
@@ -9,42 +11,26 @@ interface AddColumnFormProps{
 
 export function AddColumnForm({ workspaceId }: AddColumnFormProps){
     const { addColumn } = useWorkspaces();
-    const [title, setTitle] = useState("");
-    const [error, setError] = useState("");
-
-    function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const validError = validColumnTitle(title);
-
-        if (validError) {
-            setError(validError);
-            return;
-        }
-        
-        addColumn(workspaceId, title.trim());
-        setTitle("");
-    }
-    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-        const newValue = event.currentTarget.value;
-        setTitle(newValue);
-        const validError = validColumnTitle(newValue);
-        if (validError) {
-            setError(validError);
-        } else {
-            setError("");
-        }
-    }
-
-    return (
-        <form className="column-form" onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="New Column"
-                value={title}
-                onChange={handleChange}
-            />
-            {error && <p className="error-text">{error}</p>}
-            <button type="submit">Add Column</button>
-        </form>
-    );
+   const [showModal, setShowModal] = useState(false);
+   
+       return (
+           <>
+               <button className="add-button" type="button" onClick={() => setShowModal(true)}> 
+                   Add column
+               </button>
+               {showModal && (
+                   <TextModal
+                       title="Add Column"
+                       submitLabel="Add"
+                       placeholder="Column title"
+                       onClose={() => setShowModal(false)}
+                       onSubmit={(columnTitle) => {
+                           addColumn(workspaceId, columnTitle);
+                           setShowModal(false);
+                       }}
+                       validate={validColumnTitle}
+                   />
+               )}
+           </>
+       );
 }

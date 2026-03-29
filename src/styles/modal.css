@@ -84,7 +84,22 @@
 
 .form-error {
     margin: 0;
+    min-height: 20px;
     color: #c62828;
     font-size: 14px;
 }
-
+.add-button{
+    margin-top: 8px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+.add-button:hover{
+    background-color: white;
+    color: blue;
+    border: 1px solid var(--accent-color);
+}
