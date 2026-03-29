@@ -24,16 +24,16 @@ export function AddColumnForm({ workspaceId }: AddColumnFormProps){
         addColumn(workspaceId, title.trim());
         setTitle("");
     }
-        function handleChange(event: { currentTarget: { value: string; }; }) {
-            const newValue = event.currentTarget.value;
-            setTitle(newValue);
-            const validError = validColumnTitle(newValue);
-            if (validError) {
-                setError(validError);
-            } else {
-                setError("");
-            }
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const newValue = event.currentTarget.value;
+        setTitle(newValue);
+        const validError = validColumnTitle(newValue);
+        if (validError) {
+            setError(validError);
+        } else {
+            setError("");
         }
+    }
 
     return (
         <form className="column-form" onSubmit={handleSubmit}>

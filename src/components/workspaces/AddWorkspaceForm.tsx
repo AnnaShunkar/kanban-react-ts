@@ -1,4 +1,4 @@
-import { useState, type SetStateAction } from "react";
+import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
 import { validWorkspaceTitle } from "../../utils/validation";
@@ -21,8 +21,8 @@ export function AddWorkspaceForm() {
         addWorkspace(title.trim());
         setTitle("");
     }
-    function handleChange(event: { currentTarget: { value: SetStateAction<string>; }; }) {
-        const newValue = event.currentTarget.value as string;
+    function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const newValue = event.currentTarget.value;
         setTitle(newValue);
 
         const validError = validWorkspaceTitle(newValue);
@@ -38,7 +38,8 @@ export function AddWorkspaceForm() {
                 type="text"
                 placeholder="New Workspace"
                 value={title}
-                onChange={handleChange} />
+                onChange={handleChange}
+            />
             {error && <p className="error-text">{error}</p>}
             <button type="submit"> 
                 Add workspace

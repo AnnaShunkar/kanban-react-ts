@@ -1,24 +1,6 @@
-import type { Task, User, EncryptedPayload } from '../types';
+import type { User, EncryptedPayload } from '../types';
 import { getStoredKey, encryptData, decryptData, hashPassword } from './crypto';
 
-//tasks//
-export async function saveTasks(userName: string, tasks: Task[]): Promise<void> {
-  const key = await getStoredKey();
-    const encrypted = await encryptData<Task[]>(tasks, key);
-    
-  localStorage.setItem(`kanbanTasks_${userName}`, JSON.stringify(encrypted));
-}
-
-export async function loadTasks(userName: string): Promise<Task[]> {
-    const raw = localStorage.getItem(`kanbanTasks_${userName}`);
-    if (!raw) {
-        return [];
-    }
-    const encrypted = JSON.parse(raw) as EncryptedPayload;
-    const key = await getStoredKey();
-    
-    return decryptData<Task[]>(encrypted, key);
-}
 //users//
 export async function saveUser(user: User): Promise<void>{
   const hashedPassword = await hashPassword(user.password);
