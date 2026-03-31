@@ -2,6 +2,8 @@ import "../../styles/modal.css"
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
+import { BaseModal } from "../modals/BaseModal";
+import { validPassword } from "../../utils/validation";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -20,6 +22,12 @@ export function RegisterModal({ onClose }: RegisterModalProps) {
     event.preventDefault();
     setError("");
 
+    const validPasswordError = validPassword(password);
+    if (validPasswordError) {
+      setError(validPasswordError);
+      return;
+    }
+
     const success = await register(
       name.trim(),
       email.trim(),
@@ -31,46 +39,37 @@ export function RegisterModal({ onClose }: RegisterModalProps) {
       return;
     }
 
-    onClose();
     navigate("/workspaces");
   }
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal" onClick={(event) => event.stopPropagation()}>
-        <button type="button" className="modal-close" onClick={onClose}>
-          X
-        </button>
+    <BaseModal title="Register" onClose={onClose}>
+      <form onSubmit={handleSubmit} className="modal-form">
+        <input
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(event) => setName(event.currentTarget.value)}
+        />
 
-        <h2>Register</h2>
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(event) => setEmail(event.currentTarget.value)}
+        />
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          <input
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(event) => setPassword(event.currentTarget.value)}
+        />
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
+        {error && <p className="form-error">{error}</p>}
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-
-          {error && <p className="form-error">{error}</p>}
-
-          <button type="submit">Register</button>
-        </form>
-      </div>
-    </div>
+        <button type="submit">Register</button>
+      </form>
+    </BaseModal>
   );
-};
+}

@@ -1,4 +1,3 @@
-
 export function validWorkspaceTitle(title: string): string | null {
     const trimTitle = title.trim();
     if (!trimTitle) {
@@ -30,5 +29,12 @@ export function validTaskTitle(title: string): string | null {
     if (!trimTitle) {
         return "Task name cannot be empty";
     };
+    return null;
+}
+export function validPassword(password: string): string | null {
+    const trimPassword = password.trim();
+    if (trimPassword.length < 8) {
+    return "Password must be at least 8 characters";
+  }
     return null;
 }

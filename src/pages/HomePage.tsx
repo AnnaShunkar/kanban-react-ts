@@ -1,22 +1,27 @@
 import "../styles/main.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import {LoginModal} from "../components/auth/LoginModal";
-import {RegisterModal} from "../components/auth/RegisterModal";
 import { useAuth } from "../hooks/useAuth";
+import {LoginModal} from "../components/auth/LoginModal";
+import { RegisterModal } from "../components/auth/RegisterModal";
+import { ConfirmModal } from "../components/modals/ConfirmModal";
+
 
 export function HomePage() {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const [isLoginOpen, setIsLoginOpen] = useState(false);
-    const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showRegisterModal, setShowRegisterModal] = useState(false);
 
-    const isAnyModalOpen = isLoginOpen || isRegisterOpen;
+    const [showLoginConfirmModal, setShowLoginConfirmModal] = useState(false);
+    const [showRegisterConfirmModal, setShowRegisterConfirmModal] = useState(false);
+
+    const isAnyModalOpen = showLoginModal || showRegisterModal || showLoginConfirmModal || showRegisterConfirmModal;
 
     useEffect(() => {
         if (user) {
-            navigate("/");
+            navigate("/workspaces");
         }
     }, [user, navigate]);
 
@@ -37,7 +42,7 @@ export function HomePage() {
                         <button
                             type="button"
                             className="auth-button"
-                            onClick={() => setIsRegisterOpen(true)}
+                            onClick={() => setShowRegisterModal(true)}
                         >
                             Registration
                         </button>
@@ -45,20 +50,35 @@ export function HomePage() {
                         <button
                             type="button"
                             className="auth-button"
-                            onClick={() => setIsLoginOpen(true)}
+                            onClick={() => setShowLoginModal(true)}
                         >
                             Log in
                         </button>
                     </div>
                 )}
 
-                {isLoginOpen && (
-                    <LoginModal onClose={() => setIsLoginOpen(false)} />
+                {showLoginModal && (
+                    <LoginModal onClose={() => setShowLoginConfirmModal(true)} />
                 )}
 
-                {isRegisterOpen && (
-                    <RegisterModal onClose={() => setIsRegisterOpen(false)} />
-                )}
+                {showRegisterModal && (
+                    <RegisterModal onClose={() => setShowRegisterConfirmModal(true)} />
+            )}
+            
+            {showLoginConfirmModal && (
+                <ConfirmModal title="Leave?"
+                    message="Close login modal?"
+                    onConfirm={() => { setShowLoginConfirmModal(false); setShowLoginModal(false); }}
+                    onCancel={() => { setShowLoginConfirmModal(false) }}
+                    onClose={() => { setShowLoginConfirmModal(false) }}/>
+            )}
+            {showRegisterConfirmModal && (
+                <ConfirmModal title="Leave?"
+                    message="Close register modal?"
+                    onConfirm={() => { setShowRegisterConfirmModal(false); setShowRegisterModal(false); }}
+                    onCancel={() => { setShowRegisterConfirmModal(false) }}
+                    onClose={() => { setShowRegisterConfirmModal(false) }}/>
+            )}
             </header>
     );
 }
