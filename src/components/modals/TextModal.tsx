@@ -54,11 +54,10 @@ export function TextModal({
         const trimValue = value.trim();
         setError("");
         onSubmit(trimValue);
-        onClose();
     };
 
     return (
-        <BaseModal title={title} onClose={onClose}>
+        <BaseModal title={title} onClose={onClose} zIndex={1000}>
             <form onSubmit={handleSubmit} className="modal-form">
                 <input
                     type="text"

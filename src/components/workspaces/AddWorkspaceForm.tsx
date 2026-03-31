@@ -4,27 +4,37 @@ import "../../styles/workspaces.css"
 import "../../styles/modal.css"
 import { validWorkspaceTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
+import { ConfirmModal } from "../modals/ConfirmModal";
 
 export function AddWorkspaceForm() {
     const { addWorkspace } = useWorkspaces();
-    const [showModal, setShowModal] = useState(false);
+    const [showTextModal, setShowTextModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     
     return (
         <>
-            <button className="add-button" type="button" onClick={() => setShowModal(true)}> 
+            <button className="add-button" type="button" onClick={() => setShowTextModal(true)}>
                 Add workspace
             </button>
-            {showModal && (
+            {showTextModal && (
                 <TextModal
                     title="Add Workspace"
                     submitLabel="Add"
                     placeholder="Workspace title"
-                    onClose={() => setShowModal(false)}
+                    onClose={() => setShowConfirmModal(true)}
                     onSubmit={(workspaceTitle) => {
                         addWorkspace(workspaceTitle);
-                        setShowModal(false);
+                        setShowTextModal(false);
                     }}
                     validate={validWorkspaceTitle}
+                />
+            )}
+            {showConfirmModal && (
+                <ConfirmModal title="Leave?"
+                    message="Close this modal?"
+                    onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
+                    onCancel={() => { setShowConfirmModal(false) }}
+                    onClose={() => { setShowConfirmModal(false) }}
                 />
             )}
         </>

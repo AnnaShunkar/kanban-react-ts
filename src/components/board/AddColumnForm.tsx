@@ -4,6 +4,7 @@ import "../../styles/modal.css"
 import "../../styles/board.css"
 import { validColumnTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
+import { ConfirmModal } from "../modals/ConfirmModal";
 
 interface AddColumnFormProps{
     workspaceId: string;
@@ -11,24 +12,33 @@ interface AddColumnFormProps{
 
 export function AddColumnForm({ workspaceId }: AddColumnFormProps){
     const { addColumn } = useWorkspaces();
-   const [showModal, setShowModal] = useState(false);
+    const [showTextModal, setShowTextModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
    
        return (
            <>
-               <button className="add-button" type="button" onClick={() => setShowModal(true)}> 
+               <button className="add-button" type="button" onClick={() => setShowTextModal(true)}> 
                    Add column
                </button>
-               {showModal && (
+               {showTextModal && (
                    <TextModal
                        title="Add Column"
                        submitLabel="Add"
                        placeholder="Column title"
-                       onClose={() => setShowModal(false)}
+                       onClose={() => setShowConfirmModal(true)}
                        onSubmit={(columnTitle) => {
                            addColumn(workspaceId, columnTitle);
-                           setShowModal(false);
+                           setShowTextModal(false);
                        }}
                        validate={validColumnTitle}
+                   />
+               )}
+               {showConfirmModal && (
+                   <ConfirmModal title="Leave?"
+                    message="Close this modal?"
+                    onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
+                    onCancel={() => { setShowConfirmModal(false) }}
+                    onClose={() => { setShowConfirmModal(false) }}
                    />
                )}
            </>

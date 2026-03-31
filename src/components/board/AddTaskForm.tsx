@@ -4,6 +4,7 @@ import "../../styles/modal.css"
 import "../../styles/board.css"
 import { validTaskTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
+import { ConfirmModal } from "../modals/ConfirmModal";
 
 interface AddTaskFormProps{
     workspaceId: string;
@@ -11,24 +12,34 @@ interface AddTaskFormProps{
 }
 export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
     const { addTask } = useWorkspaces();
-    const [showModal, setShowModal] = useState(false);
+    const [showTextModal, setShowTextModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+
 
     return (
         <>
-            <button className="add-button" type="button" onClick={() => setShowModal(true)}> 
+            <button className="add-button" type="button" onClick={() => setShowTextModal(true)}>
                 Add task
             </button>
-            {showModal && (
+            {showTextModal && (
                 <TextModal
                     title="Add Task"
                     submitLabel="Add"
                     placeholder="Task text"
-                    onClose={() => setShowModal(false)}
+                    onClose={() => setShowConfirmModal(true)}
                     onSubmit={(taskTitle) => {
                         addTask(workspaceId, columnId, taskTitle);
-                        setShowModal(false);
+                        setShowTextModal(false);
                     }}
                     validate={validTaskTitle}
+                />
+            )}
+            {showConfirmModal && (
+                <ConfirmModal title="Leave?"
+                    message="Close this modal?"
+                    onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
+                    onCancel={() => { setShowConfirmModal(false) }}
+                    onClose={() => { setShowConfirmModal(false) }}
                 />
             )}
         </>

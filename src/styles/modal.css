@@ -103,3 +103,38 @@
     color: blue;
     border: 1px solid var(--accent-color);
 }
+/* CONFIRM MODAL */
+.confirm-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.confirm-modal-content p {
+    margin: 0;
+    color: #000;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.confirm-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.confirm-modal-actions button {
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: white;
+    background-color: blue;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.confirm-modal-actions button:hover {
+    border: 1px solid blue;
+    color: blue;
+    background-color: white;
+}
