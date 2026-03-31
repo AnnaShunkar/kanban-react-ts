@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
-import "../../styles/main.css"
 import "../../styles/modal.css"
+import "../../styles/board.css"
 import { validTaskTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 

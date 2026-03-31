@@ -3,7 +3,7 @@ import type { TaskColumn } from "../../types";
 import {TaskCard} from "./TaskCard";
 import {AddTaskForm} from "./AddTaskForm";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
-import "../../styles/main.css"
+import "../../styles/board.css"
 
 interface ColumnProps {
     workspaceId: string;

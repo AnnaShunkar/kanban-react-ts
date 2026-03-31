@@ -1,6 +1,6 @@
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import { useState } from "react";
-import "../../styles/main.css"
+import "../../styles/board.css"
 
 interface TaskCardProps {
     workspaceId: string;
@@ -14,9 +14,9 @@ interface TaskCardProps {
 }
 
 export function TaskCard({
-     workspaceId,
-  columnId,
-  taskId,
+    workspaceId,
+    columnId,
+    taskId,
     title,
     canMoveLeft,
     canMoveRight,

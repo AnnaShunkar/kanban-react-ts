@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
-import "../../styles/main.css"
+import "../../styles/workspaces.css"
 import "../../styles/modal.css"
 import { validWorkspaceTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";

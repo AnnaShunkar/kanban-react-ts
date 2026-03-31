@@ -1,0 +1,120 @@
+.workspaces-page,
+.workspace-page {
+    padding: 30px 20px 50px;
+    color: black;
+}
+
+.workspaces-title,
+.workspace-title {
+    color: var(--accent-color);
+    background-color: transparent;
+    box-shadow: 0 20px 20px #0000001a;
+    margin-bottom: 24px;
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.workspaces-panel {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 12px;
+    background-color: var(--color-main-bg);
+    box-shadow: 0 4px 6px var(--box-shadow);
+}
+
+.workspace-form,
+.column-form,
+.task-form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.workspace-form input,
+.column-form input,
+.task-form input {
+    min-width: 220px;
+    padding: 10px 12px;
+    box-sizing: border-box;
+}
+
+.workspace-form button,
+.column-form button,
+.task-form button {
+    cursor: pointer;
+    padding: 10px 16px;
+    border-radius: 10px;
+    color: white;
+    background-color: blue;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.workspace-form button:hover,
+.column-form button:hover,
+.task-form button:hover {
+    border: 1px solid blue;
+    color: blue;
+    background-color: white;
+}
+
+.workspace-form,
+.column-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.workspace-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.workspace-card {
+    background-color: var(--main-color);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px var(--box-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.workspace-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--box-shadow);
+}
+
+.workspace-link {
+    display: block;
+    padding: 20px;
+    text-decoration: none;
+    color: black;
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.error-text {
+    font-size: 12px;
+    margin: 0 auto;
+    color: var(--error-text);
+}
+
+.workspace-edit {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+.workspace-edit input {
+    min-width: 220px;
+    max-width: 320px;
+    width: 100%;
+}

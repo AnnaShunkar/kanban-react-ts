@@ -35,7 +35,7 @@ export function WorkspaceList() {
         <li className="workspace-card" key={workspace.id}>
           {editingId === workspace.id ? (
                 <div className="workspace-edit">
-                    <input
+                  <input
                 value={title}
                 onChange={(event) => setTitle(event.currentTarget.value)}
               />
