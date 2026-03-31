@@ -26,59 +26,57 @@ export function HomePage() {
     }, [user, navigate]);
 
     return (
-            <header>
-                <h1>
-                    <span className="title-deco">KanBan</span> Board
-                </h1>
+        <header>
+            <h1>
+                <span className="title-deco">KanBan</span> Board
+            </h1>
 
-                <p className="desritpion">
-                    KanBan Board helps teams visualize progress, limit work-in-progress
-                    (WIP), and identify bottlenecks, improving efficiency and
-                    communication.
-                </p>
+            <p className="desritpion">
+                KanBan Board helps teams visualize progress, limit work-in-progress
+                (WIP), and identify bottlenecks, improving efficiency and
+                communication.
+            </p>
 
-                {!isAnyModalOpen && (
-                    <div className="auth-section">
-                        <button
-                            type="button"
-                            className="auth-button"
-                            onClick={() => setShowRegisterModal(true)}
-                        >
-                            Registration
-                        </button>
+            {!isAnyModalOpen && (
+                <div className="auth-section">
+                    <button
+                        type="button"
+                        className="auth-button"
+                        onClick={() => setShowRegisterModal(true)}
+                    >
+                        Registration
+                    </button>
 
-                        <button
-                            type="button"
-                            className="auth-button"
-                            onClick={() => setShowLoginModal(true)}
-                        >
-                            Log in
-                        </button>
-                    </div>
-                )}
+                    <button
+                        type="button"
+                        className="auth-button"
+                        onClick={() => setShowLoginModal(true)}
+                    >
+                        Log in
+                    </button>
+                </div>
+            )}
 
-                {showLoginModal && (
-                    <LoginModal onClose={() => setShowLoginConfirmModal(true)} />
-                )}
+            {showLoginModal && (
+                <LoginModal onClose={() => setShowLoginConfirmModal(true)} />
+            )}
 
-                {showRegisterModal && (
-                    <RegisterModal onClose={() => setShowRegisterConfirmModal(true)} />
+            {showRegisterModal && (
+                <RegisterModal onClose={() => setShowRegisterConfirmModal(true)} />
             )}
             
             {showLoginConfirmModal && (
                 <ConfirmModal title="Leave?"
                     message="Close login modal?"
                     onConfirm={() => { setShowLoginConfirmModal(false); setShowLoginModal(false); }}
-                    onCancel={() => { setShowLoginConfirmModal(false) }}
-                    onClose={() => { setShowLoginConfirmModal(false) }}/>
+                    onCancel={() => { setShowLoginConfirmModal(false) }} />
             )}
             {showRegisterConfirmModal && (
                 <ConfirmModal title="Leave?"
                     message="Close register modal?"
                     onConfirm={() => { setShowRegisterConfirmModal(false); setShowRegisterModal(false); }}
-                    onCancel={() => { setShowRegisterConfirmModal(false) }}
-                    onClose={() => { setShowRegisterConfirmModal(false) }}/>
+                    onCancel={() => { setShowRegisterConfirmModal(false) }} />
             )}
-            </header>
+        </header>
     );
 }

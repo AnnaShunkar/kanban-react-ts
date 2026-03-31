@@ -35,10 +35,9 @@ export function AddColumnForm({ workspaceId }: AddColumnFormProps){
                )}
                {showConfirmModal && (
                    <ConfirmModal title="Leave?"
-                    message="Close this modal?"
+                    message="Close column modal?"
                     onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
                     onCancel={() => { setShowConfirmModal(false) }}
-                    onClose={() => { setShowConfirmModal(false) }}
                    />
                )}
            </>

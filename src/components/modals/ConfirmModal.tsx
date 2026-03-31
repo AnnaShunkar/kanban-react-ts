@@ -7,11 +7,10 @@ interface ConfirmModalProps{
     cancelLabel?: string;
     onConfirm: () => void;
     onCancel: () => void;
-    onClose: () => void;
 }
-export function ConfirmModal({ title, message, confirmLabel = "Yes", cancelLabel = "No", onConfirm, onCancel, onClose }: ConfirmModalProps) {
+export function ConfirmModal({ title, message, confirmLabel = "Yes", cancelLabel = "No", onConfirm, onCancel }: ConfirmModalProps) {
     return (
-        <BaseModal title={title} onClose={onClose} zIndex={1100} showCloseButton={false}>
+        <BaseModal title={title} zIndex={1100} showCloseButton={false} closeOnBackdrop={false} onClose={() => {}}>
             <div className="confirm-modal-content">
                 <p>{message}</p>
                 <div className="confirm-modal-actions">

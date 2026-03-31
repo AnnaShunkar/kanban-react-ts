@@ -34,7 +34,6 @@ export function AddWorkspaceForm() {
                     message="Close this modal?"
                     onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
                     onCancel={() => { setShowConfirmModal(false) }}
-                    onClose={() => { setShowConfirmModal(false) }}
                 />
             )}
         </>

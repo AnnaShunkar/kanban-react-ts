@@ -36,10 +36,9 @@ export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
             )}
             {showConfirmModal && (
                 <ConfirmModal title="Leave?"
-                    message="Close this modal?"
+                    message="Close task modal?"
                     onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
                     onCancel={() => { setShowConfirmModal(false) }}
-                    onClose={() => { setShowConfirmModal(false) }}
                 />
             )}
         </>

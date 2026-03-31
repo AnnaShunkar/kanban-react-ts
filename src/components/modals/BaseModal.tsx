@@ -8,6 +8,7 @@ interface BaseModalProps {
     children: ReactNode;
     zIndex?: number;
     showCloseButton?: boolean;
+    closeOnBackdrop?: boolean;
 }
 
 export function BaseModal({
@@ -16,9 +17,15 @@ export function BaseModal({
     children,
     zIndex = 1000,
     showCloseButton = true,
+    closeOnBackdrop = true,
 }: BaseModalProps) {
+    function handelBackdropClick() {
+        if (closeOnBackdrop) {
+            onClose();
+        }
+    };
     return createPortal(
-        <div className="modal-backdrop" onClick={onClose} style={{zIndex}}>
+        <div className="modal-backdrop" onClick={handelBackdropClick} style={{zIndex}}>
             <div className="modal" onClick={(event) => event.stopPropagation()}>
                 {showCloseButton && (
                     <button
