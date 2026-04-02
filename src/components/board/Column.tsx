@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { TaskColumn } from "../../types";
+import type { TaskColumn } from "../../types/taskcolumn";
 import {TaskCard} from "./TaskCard";
 import {AddTaskForm} from "./AddTaskForm";
 import { useWorkspaces } from "../../hooks/useWorkspaces";

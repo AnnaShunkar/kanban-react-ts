@@ -1,4 +1,5 @@
-import type { User, EncryptedPayload } from '../types';
+import type { User } from '../types/user';
+import type {EncryptedPayload} from "../types/encryptedpayload"
 import { getStoredKey, encryptData, decryptData, hashPassword } from './crypto';
 
 //users//

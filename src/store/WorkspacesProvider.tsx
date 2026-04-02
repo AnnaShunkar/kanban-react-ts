@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { mockWorkspaces } from "../data/mockData";
 import { WorkspacesContext } from "./WorkspacesContext";
-import type { Workspace } from "../types";
+import type { Workspace } from "../types/workspace";
 import { moveTask } from "../utils/tasks";
 import { moveColumns } from "../utils/columns";
 

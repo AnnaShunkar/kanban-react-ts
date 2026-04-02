@@ -1,4 +1,4 @@
-import type { EncryptedPayload } from "../types";
+import type { EncryptedPayload } from "../types/encryptedpayload"
 
 export async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();

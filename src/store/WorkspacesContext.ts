@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import type { Workspace } from "../types";
+import type { Workspace } from "../types/workspace";
 
 export interface WorkspacesContextValue {
     workspaces: Workspace[];

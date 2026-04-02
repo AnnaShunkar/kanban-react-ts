@@ -1,4 +1,4 @@
-import type { Workspace } from "../types";
+import type { Workspace } from "../types/workspace";
 
 export const mockWorkspaces: Workspace[] = [
     {
