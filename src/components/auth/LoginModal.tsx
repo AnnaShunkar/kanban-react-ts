@@ -5,6 +5,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
 import type { FC } from "react";
 import { validPassword } from "../../utils/validation";
+import { AppRoutes } from "../../utils/routes";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -17,6 +18,8 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) =>  {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const errorMessage = error ? <p className="form-error">{error}</p> : null;
 
   const handleSubmit = async(event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -35,7 +38,7 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) =>  {
       return;
     }
 
-    navigate("/workspaces");
+    navigate(AppRoutes.Workspaces);
   }
 
   return (
@@ -55,7 +58,7 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) =>  {
           onChange={(event) => setPassword(event.currentTarget.value)}
         />
 
-        {error && <p className="form-error">{error}</p>}
+        {errorMessage}
 
         <button type="submit">Log in</button>
       </form>

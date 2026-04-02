@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
 import { validEmail, validPassword } from "../../utils/validation";
+import { AppRoutes } from "../../utils/routes";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -17,6 +18,8 @@ export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const errorMessage = error ? <p className="form-error">{error}</p> : null;
 
   const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -43,7 +46,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
       setError("User already exists or data is invalid");
       return;
     }
-    navigate("/workspaces");
+    navigate(AppRoutes.Workspaces);
   }
 
   return (
@@ -70,7 +73,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
           onChange={(event) => setPassword(event.currentTarget.value)}
         />
 
-        {error && <p className="form-error">{error}</p>}
+        {errorMessage}
 
         <button type="submit">Register</button>
       </form>

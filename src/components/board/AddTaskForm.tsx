@@ -5,6 +5,7 @@ import "../../styles/board.css"
 import { validTaskTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
+import { ModalKeys } from "../../utils/modalKeys";
 
 interface AddTaskFormProps{
     workspaceId: string;
@@ -12,33 +13,37 @@ interface AddTaskFormProps{
 }
 export const AddTaskForm: FC<AddTaskFormProps> = ({ workspaceId, columnId }) => {
     const { addTask } = useWorkspaces();
-    const [showTextModal, setShowTextModal] = useState(false);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [activeModal, setActiveModal] = useState<ModalKeys | null>(null);
+    const [activeConfirmModal, setActiveConfirmModal] = useState<ModalKeys | null>(null);
 
-    const textModal = showTextModal ? (
+    const textModal = activeModal === ModalKeys.AddTask ? (
         <TextModal
             title="Add Task"
             submitLabel="Add"
             placeholder="Task text"
-            onClose={() => setShowConfirmModal(true)}
+            onClose={() => setActiveConfirmModal(ModalKeys.AddTaskConfirm)}
             onSubmit={(taskTitle) => {
                 addTask(workspaceId, columnId, taskTitle);
-                setShowTextModal(false);
+                setActiveModal(null);
             }}
             validate={validTaskTitle}
         />
     ) : null;
-    const confirmModal = showConfirmModal ? (
+
+    const confirmModal = activeConfirmModal === ModalKeys.AddTaskConfirm ? (
         <ConfirmModal title="Leave?"
             message="Close task modal?"
-            onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
-            onCancel={() => { setShowConfirmModal(false) }}
+            onConfirm={() => {
+                setActiveConfirmModal(null);
+                setActiveModal(null);
+            }}
+            onCancel={() => { setActiveConfirmModal(null) }}
         />
     ) : null;
 
     return (
         <>
-            <button className="add-button" type="button" onClick={() => setShowTextModal(true)}>
+            <button className="add-button" type="button" onClick={() => setActiveModal(ModalKeys.AddTask)}>
                 Add task
             </button>
             {textModal}

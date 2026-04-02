@@ -5,23 +5,70 @@ import { useAuth } from "../hooks/useAuth";
 import {LoginModal} from "../components/auth/LoginModal";
 import { RegisterModal } from "../components/auth/RegisterModal";
 import { ConfirmModal } from "../components/modals/ConfirmModal";
+import { AppRoutes } from "../utils/routes";
+import { ModalKeys } from "../utils/modalKeys";
 
 
 export const HomePage: FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 
-    const [showLoginModal, setShowLoginModal] = useState(false);
-    const [showRegisterModal, setShowRegisterModal] = useState(false);
+    const [activeModal, setActiveModal] = useState<ModalKeys | null>(null);
+    const [activeConfirmModal, setActiveConfirmModal] = useState<ModalKeys | null>(null);
 
-    const [showLoginConfirmModal, setShowLoginConfirmModal] = useState(false);
-    const [showRegisterConfirmModal, setShowRegisterConfirmModal] = useState(false);
+    const isAnyModalOpen = activeModal !== null || activeConfirmModal !== null;
 
-    const isAnyModalOpen = showLoginModal || showRegisterModal || showLoginConfirmModal || showRegisterConfirmModal;
+    const authSection = !isAnyModalOpen ? (
+        <div className="auth-section">
+            <button
+                type="button"
+                className="auth-button"
+                onClick={() => setActiveModal(ModalKeys.Register)}
+            >
+                Registration
+            </button>
+
+            <button
+                type="button"
+                className="auth-button"
+                onClick={() => setActiveModal(ModalKeys.Login)}
+            >
+                Log in
+            </button>
+        </div>
+    ) : null;
+
+    const loginModal = activeModal === ModalKeys.Login ? (
+        <LoginModal onClose={() => setActiveConfirmModal(ModalKeys.LoginConfirm)} />
+    ) : null;
+
+    const registerModal = activeModal === ModalKeys.Register ? (
+        <RegisterModal onClose={() => setActiveConfirmModal(ModalKeys.RegisterConfirm)} />
+    ) : null;
+
+    const loginConfirmModal = activeConfirmModal === ModalKeys.LoginConfirm ? (
+        <ConfirmModal title="Leave?"
+            message="Close login modal?"
+            onConfirm={() => {
+                setActiveConfirmModal(null);
+                setActiveModal(null);
+            }}
+            onCancel={() => { setActiveConfirmModal(null) }} />
+    ) : null;
+
+    const registerConfirmModal = activeConfirmModal === ModalKeys.RegisterConfirm ? (
+        <ConfirmModal title="Leave?"
+            message="Close register modal?"
+            onConfirm={() => {
+                setActiveConfirmModal(null);
+                setActiveModal(null);
+            }}
+            onCancel={() => { setActiveConfirmModal(null) }} />
+    ) : null;
 
     useEffect(() => {
         if (user) {
-            navigate("/workspaces");
+            navigate(AppRoutes.Workspaces);
         }
     }, [user, navigate]);
 
@@ -37,46 +84,11 @@ export const HomePage: FC = () => {
                 communication.
             </p>
 
-            {!isAnyModalOpen && (
-                <div className="auth-section">
-                    <button
-                        type="button"
-                        className="auth-button"
-                        onClick={() => setShowRegisterModal(true)}
-                    >
-                        Registration
-                    </button>
-
-                    <button
-                        type="button"
-                        className="auth-button"
-                        onClick={() => setShowLoginModal(true)}
-                    >
-                        Log in
-                    </button>
-                </div>
-            )}
-
-            {showLoginModal && (
-                <LoginModal onClose={() => setShowLoginConfirmModal(true)} />
-            )}
-
-            {showRegisterModal && (
-                <RegisterModal onClose={() => setShowRegisterConfirmModal(true)} />
-            )}
-            
-            {showLoginConfirmModal && (
-                <ConfirmModal title="Leave?"
-                    message="Close login modal?"
-                    onConfirm={() => { setShowLoginConfirmModal(false); setShowLoginModal(false); }}
-                    onCancel={() => { setShowLoginConfirmModal(false) }} />
-            )}
-            {showRegisterConfirmModal && (
-                <ConfirmModal title="Leave?"
-                    message="Close register modal?"
-                    onConfirm={() => { setShowRegisterConfirmModal(false); setShowRegisterModal(false); }}
-                    onCancel={() => { setShowRegisterConfirmModal(false) }} />
-            )}
+            {authSection}
+            {loginModal}
+            {registerModal}
+            {loginConfirmModal}
+            {registerConfirmModal}
         </header>
     );
 }

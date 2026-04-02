@@ -2,6 +2,7 @@ import { useState, type FC } from "react";
 import { Link } from "react-router";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
+import { getWorkspaceRoute } from "../../utils/routes";
 
 export const WorkspaceList: FC = () => {
     const { workspaces, updateWorkspace, deleteWorkspace } = useWorkspaces();
@@ -48,7 +49,7 @@ export const WorkspaceList: FC = () => {
             <>
               <Link
                 className="workspace-link"
-                to={`/workspaces/${workspace.id}`}
+                to={getWorkspaceRoute(workspace.id)}
               >
                 {workspace.title}
               </Link>

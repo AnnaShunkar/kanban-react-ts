@@ -25,19 +25,21 @@ export const BaseModal: FC<BaseModalProps> = ({
         }
     };
 
+    const closeButton = showCloseButton ? (
+        <button
+            type="button"
+            className="modal-close"
+            onClick={onClose}
+            aria-label="Close modal"
+        >
+            X
+        </button>
+    ) : null;
+
     return createPortal(
         <div className="modal-backdrop" onClick={handelBackdropClick} style={{zIndex}}>
             <div className="modal" onClick={(event) => event.stopPropagation()}>
-                {showCloseButton && (
-                    <button
-                        type="button"
-                        className="modal-close"
-                        onClick={onClose}
-                        aria-label="Close modal"
-                    >
-                        X
-                    </button>
-                )}
+                {closeButton}
 
                 <h2>{title}</h2>
                 {children}

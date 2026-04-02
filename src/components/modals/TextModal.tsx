@@ -23,6 +23,8 @@ export const TextModal: FC<TextModalProps> =({
     const [value, setValue] = useState(initialValue);
     const [error, setError] = useState("");
 
+    const errorMessage = error ? <p className="form-error">{error}</p> : null;
+
     const getValidationError = (rawValue: string): string => {
         const trimValue = rawValue.trim();
 
@@ -65,7 +67,7 @@ export const TextModal: FC<TextModalProps> =({
                     placeholder={placeholder}
                     onChange={handleChange}
                 />
-                {error && <p className="form-error">{error}</p>}
+                {errorMessage}
                 <button type="submit">{submitLabel}</button>
             </form>
         </BaseModal>

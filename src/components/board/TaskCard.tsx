@@ -28,6 +28,27 @@ export const TaskCard: FC<TaskCardProps> = ({
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(title);
 
+    const leftMoveButton = canMoveLeft ? (
+        <button className="move-button" type="button" onClick={onMoveLeft}>
+            ←
+        </button>
+    ) : null;
+
+    const taskTitle = isEditing ? (
+        <input
+            value={value}
+            onChange={(event) => setValue(event.currentTarget.value)}
+        />
+    ) : (
+        <span>{title}</span>
+    );
+
+    const rightMoveButton = canMoveRight ? (
+        <button className="move-button" type="button" onClick={onMoveRight}>
+            →
+        </button>
+    ) : null;
+
     const handleSave = (): void => {
         const trimValue = value.trim();
 
@@ -41,20 +62,8 @@ export const TaskCard: FC<TaskCardProps> = ({
 
     return (
         <div className="task-card">
-            {canMoveLeft && (
-                <button  className="move-button"type="button" onClick={onMoveLeft}>
-                    ←
-                </button>
-            )}
-
-            {isEditing ? (
-                <input
-                    value={value}
-                    onChange={(event) => setValue(event.currentTarget.value)}
-                />
-            ) : (
-                <span>{title}</span>
-            )}
+            {leftMoveButton}
+            {taskTitle}
 
             <div>
                 <button  className="e-d-button"
@@ -74,11 +83,7 @@ export const TaskCard: FC<TaskCardProps> = ({
             </button>
             </div>
 
-            {canMoveRight && (
-                <button className="move-button" type="button" onClick={onMoveRight}>
-                    →
-                </button>
-            )}
+            {rightMoveButton}
         </div>
     );
 }

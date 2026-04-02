@@ -1,3 +1,4 @@
+import { AppRoutes } from "../utils/routes";
 import { createHashRouter } from "react-router";
 import {HomePage} from "../pages/HomePage";
 import {WorkspacesPage} from "../pages/WorkspacesPage";
@@ -5,15 +6,15 @@ import {WorkspacePage} from "../pages/WorkspacePage";
 
 export const router = createHashRouter([
   {
-    path: "/",
+    path: AppRoutes.Home,
     element: <HomePage />,
   },
   {
-    path: "/workspaces",
+    path: AppRoutes.Workspaces,
     element: <WorkspacesPage />,
   },
   {
-    path: "/workspaces/:workspaceId",
+    path: AppRoutes.WorkspaceId,
     element: <WorkspacePage />,
   },
 ]);

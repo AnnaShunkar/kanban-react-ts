@@ -5,35 +5,41 @@ import "../../styles/modal.css"
 import { validWorkspaceTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
+import { ModalKeys } from "../../utils/modalKeys";
 
 export const AddWorkspaceForm: FC = () => {
     const { addWorkspace } = useWorkspaces();
-    const [showTextModal, setShowTextModal] = useState(false);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [activeModal, setActiveModal] = useState<ModalKeys | null>(null);
+    const [activeConfirmModal, setActiveConfirmModal] = useState<ModalKeys | null>(null);
     
-    const textModal = showTextModal ? (
+    const textModal = activeModal === ModalKeys.AddWorkspace ? (
         <TextModal
             title="Add Workspace"
             submitLabel="Add"
             placeholder="Workspace title"
-            onClose={() => setShowConfirmModal(true)}
+            onClose={() => setActiveConfirmModal(ModalKeys.AddWorkspaceConfirm)}
             onSubmit={(workspaceTitle) => {
                 addWorkspace(workspaceTitle);
-                setShowTextModal(false);
+                setActiveModal(null);
             }}
             validate={validWorkspaceTitle}
         />
     ) : null;
-    const confirmModal = showConfirmModal ? (
+
+    const confirmModal = activeConfirmModal === ModalKeys.AddWorkspaceConfirm ? (
         <ConfirmModal title="Leave?"
             message="Close this modal?"
-            onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
-            onCancel={() => { setShowConfirmModal(false) }}
+            onConfirm={() => {
+                setActiveConfirmModal(null);
+                setActiveModal(null);
+            }}
+            onCancel={() => { setActiveConfirmModal(null) }}
         />
     ) : null;
+
     return (
         <>
-            <button className="add-button" type="button" onClick={() => setShowTextModal(true)}>
+            <button className="add-button" type="button" onClick={() => setActiveModal(ModalKeys.AddWorkspace)}>
                 Add workspace
             </button>
             {textModal}

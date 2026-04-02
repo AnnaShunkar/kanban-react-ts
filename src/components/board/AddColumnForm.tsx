@@ -5,6 +5,7 @@ import "../../styles/board.css"
 import { validColumnTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
+import { ModalKeys } from "../../utils/modalKeys";
 
 
 interface AddColumnFormProps{
@@ -13,25 +14,29 @@ interface AddColumnFormProps{
 
 export const AddColumnForm: FC<AddColumnFormProps> = ({ workspaceId }) => {
     const { addColumn } = useWorkspaces();
-    const [showTextModal, setShowTextModal] = useState(false);
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [activeModal, setActiveModal] = useState<ModalKeys | null>(null);
+    const [activeConfirmModal, setActiveConfirmModal] = useState<ModalKeys | null>(null);
 
-    const confirmModal = showConfirmModal ? (
+    const confirmModal = activeConfirmModal === ModalKeys.AddColumnConfirm ? (
         <ConfirmModal title="Leave?"
             message="Close column modal?"
-            onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
-            onCancel={() => { setShowConfirmModal(false) }}
+            onConfirm={() => {
+                setActiveConfirmModal(null);
+                setActiveModal(null);
+            }}
+            onCancel={() => { setActiveConfirmModal(null) }}
         />
     ) : null;
-    const textModal = showTextModal ? (
+
+    const textModal = activeModal === ModalKeys.AddColumn ? (
         <TextModal
             title="Add Column"
             submitLabel="Add"
             placeholder="Column title"
-            onClose={() => setShowConfirmModal(true)}
+            onClose={() => setActiveConfirmModal(ModalKeys.AddColumnConfirm)}
             onSubmit={(columnTitle) => {
                 addColumn(workspaceId, columnTitle);
-                setShowTextModal(false);
+                setActiveModal(null);
             }}
             validate={validColumnTitle}
         />
@@ -39,7 +44,7 @@ export const AddColumnForm: FC<AddColumnFormProps> = ({ workspaceId }) => {
    
        return (
            <>
-               <button className="add-button" type="button" onClick={() => setShowTextModal(true)}> 
+               <button className="add-button" type="button" onClick={() => setActiveModal(ModalKeys.AddColumn)}> 
                    Add column
                </button>
                {textModal}
