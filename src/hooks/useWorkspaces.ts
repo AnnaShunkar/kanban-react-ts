@@ -1,10 +1,5 @@
-import { useContext } from "react";
-import { WorkspacesContext } from "../store/WorkspacesContext";
+import { useWorkspacesStore } from "../store/workspacesStore";
 
-export function useWorkspaces() {
-    const context = useContext(WorkspacesContext);
-    if (!context) {
-        throw new Error("useWorkspaces must be used inside WorkspacesProvider");
-    }
-    return context;
-}
+export const useWorkspaces = () => {
+    return useWorkspacesStore();
+};
