@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/workspaces.css"
 import "../../styles/modal.css"
@@ -6,7 +6,7 @@ import { validWorkspaceTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
 
-export function AddWorkspaceForm() {
+export const AddWorkspaceForm: FC = () => {
     const { addWorkspace } = useWorkspaces();
     const [showTextModal, setShowTextModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);

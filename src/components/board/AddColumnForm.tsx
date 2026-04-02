@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/modal.css"
 import "../../styles/board.css"
@@ -6,11 +6,12 @@ import { validColumnTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
 
+
 interface AddColumnFormProps{
     workspaceId: string;
 }
 
-export function AddColumnForm({ workspaceId }: AddColumnFormProps){
+export const AddColumnForm: FC<AddColumnFormProps> = ({ workspaceId }) => {
     const { addColumn } = useWorkspaces();
     const [showTextModal, setShowTextModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);

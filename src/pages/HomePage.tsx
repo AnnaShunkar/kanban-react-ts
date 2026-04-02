@@ -1,5 +1,5 @@
 import "../styles/main.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, type FC } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import {LoginModal} from "../components/auth/LoginModal";
@@ -7,7 +7,7 @@ import { RegisterModal } from "../components/auth/RegisterModal";
 import { ConfirmModal } from "../components/modals/ConfirmModal";
 
 
-export function HomePage() {
+export const HomePage: FC = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
 

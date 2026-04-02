@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import type { TaskColumn } from "../../types/taskcolumn";
 import {TaskCard} from "./TaskCard";
 import {AddTaskForm} from "./AddTaskForm";
@@ -12,12 +12,12 @@ interface ColumnProps {
     totalColumns: number;
 }
 
-export function Column({
+export const Column: FC<ColumnProps> = ({
     workspaceId,
     column,
     columnIndex,
     totalColumns,
-}: ColumnProps) {
+}) => {
     const { moveTask, moveColumns, updateColumn, deleteColumn } = useWorkspaces();
 
     const [isEditing, setIsEditing] = useState(false);

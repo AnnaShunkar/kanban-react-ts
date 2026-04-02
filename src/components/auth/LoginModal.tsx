@@ -3,12 +3,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
+import type { FC } from "react";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
-export function LoginModal({ onClose }: LoginModalProps) {
+export const LoginModal: FC<LoginModalProps> = ({ onClose }) =>  {
   const { login } = useAuth();
   const navigate = useNavigate();
 

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { Link } from "react-router";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/main.css"
 
-export function WorkspaceList() {
+export const WorkspaceList: FC = () => {
     const { workspaces, updateWorkspace, deleteWorkspace } = useWorkspaces();
     const [editingId, setEditingId] = useState<string | null>(null);
     const [title, setTitle] = useState("");

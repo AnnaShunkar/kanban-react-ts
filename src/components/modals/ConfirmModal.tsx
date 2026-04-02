@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import { BaseModal } from "./BaseModal";
 
 interface ConfirmModalProps{
@@ -8,7 +9,7 @@ interface ConfirmModalProps{
     onConfirm: () => void;
     onCancel: () => void;
 }
-export function ConfirmModal({ title, message, confirmLabel = "Yes", cancelLabel = "No", onConfirm, onCancel }: ConfirmModalProps) {
+export const ConfirmModal: FC<ConfirmModalProps> = ({ title, message, confirmLabel = "Yes", cancelLabel = "No", onConfirm, onCancel }) =>  {
     return (
         <BaseModal title={title} zIndex={1100} showCloseButton={false} closeOnBackdrop={false} onClose={() => {}}>
             <div className="confirm-modal-content">

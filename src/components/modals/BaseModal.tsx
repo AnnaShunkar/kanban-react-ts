@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { FC, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import "../../styles/modal.css";
 
@@ -11,14 +11,14 @@ interface BaseModalProps {
     closeOnBackdrop?: boolean;
 }
 
-export function BaseModal({
+export const BaseModal: FC<BaseModalProps> = ({
     title,
     onClose,
     children,
     zIndex = 1000,
     showCloseButton = true,
     closeOnBackdrop = true,
-}: BaseModalProps) {
+}) => {
     function handelBackdropClick() {
         if (closeOnBackdrop) {
             onClose();

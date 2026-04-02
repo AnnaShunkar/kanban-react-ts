@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState, type FC, type ReactNode } from "react";
 import { mockWorkspaces } from "../data/mockData";
 import { WorkspacesContext } from "./WorkspacesContext";
 import type { Workspace } from "../types/workspace";
@@ -9,7 +9,7 @@ interface WorkspacesProviderProps {
     children: ReactNode;
 }
 
-export function WorkspacesProvider({ children }: WorkspacesProviderProps) {
+export const WorkspacesProvider: FC<WorkspacesProviderProps> = ({ children }) => {
     const [workspaces, setWorkspaces] = useState<Workspace[]>(mockWorkspaces);
 //WORKSPACES
     function getWorkspaceById(workspaceId: string): Workspace | undefined {

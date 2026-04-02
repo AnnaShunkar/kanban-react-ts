@@ -1,5 +1,6 @@
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import { useState } from "react";
+import type { FC } from "react";
 import "../../styles/board.css"
 
 interface TaskCardProps {
@@ -13,7 +14,7 @@ interface TaskCardProps {
     onMoveRight: () => void;
 }
 
-export function TaskCard({
+export const TaskCard: FC<TaskCardProps> = ({
     workspaceId,
     columnId,
     taskId,
@@ -22,7 +23,7 @@ export function TaskCard({
     canMoveRight,
     onMoveLeft,
     onMoveRight,
-}: TaskCardProps) {
+}) => {
     const { updateTask, deleteTask } = useWorkspaces();
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(title);

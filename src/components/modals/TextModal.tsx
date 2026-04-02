@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { BaseModal } from "./BaseModal";
 
 interface TextModalProps { 
@@ -11,7 +11,7 @@ interface TextModalProps {
     validate: (value: string) => string | null;
 }
 
-export function TextModal({
+export const TextModal: FC<TextModalProps> =({
     title,
     submitLabel,
     initialValue = "",
@@ -19,7 +19,7 @@ export function TextModal({
     onClose,
     onSubmit,
     validate,
-}: TextModalProps) {
+}) => {
     const [value, setValue] = useState(initialValue);
     const [error, setError] = useState("");
 

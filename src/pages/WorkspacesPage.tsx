@@ -1,8 +1,9 @@
+import type { FC } from "react";
 import {AddWorkspaceForm} from "../components/workspaces/AddWorkspaceForm";
 import {WorkspaceList} from "../components/workspaces/WorkspaceList";
 import "../styles/main.css"
 
-export function WorkspacesPage() {
+export const WorkspacesPage: FC = () => {
     return (
         <section className="workspaces-page">
             <h1 className="workspaces-title">Workspaces</h1>

@@ -3,8 +3,9 @@ import { useWorkspaces } from "../hooks/useWorkspaces";
 import {Column} from "../components/board/Column";
 import {AddColumnForm} from "../components/board/AddColumnForm";
 import "../styles/main.css"
+import type { FC } from "react";
 
-export function WorkspacePage() {
+export const WorkspacePage: FC = () => {
     const { workspaceId } = useParams();
     const { getWorkspaceById } = useWorkspaces();
 

@@ -1,5 +1,5 @@
 import "../../styles/modal.css"
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
@@ -9,7 +9,7 @@ interface RegisterModalProps {
   onClose: () => void;
 }
 
-export function RegisterModal({ onClose }: RegisterModalProps) {
+export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
   const { register } = useAuth();
   const navigate = useNavigate();
 

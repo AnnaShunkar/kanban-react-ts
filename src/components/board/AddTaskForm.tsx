@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type FC } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/modal.css"
 import "../../styles/board.css"
@@ -10,7 +10,7 @@ interface AddTaskFormProps{
     workspaceId: string;
     columnId: string;
 }
-export function AddTaskForm({ workspaceId, columnId }: AddTaskFormProps) {
+export const AddTaskForm: FC<AddTaskFormProps> = ({ workspaceId, columnId }) => {
     const { addTask } = useWorkspaces();
     const [showTextModal, setShowTextModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);

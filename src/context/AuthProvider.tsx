@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { AuthContext } from './AuthContext';
-import type { ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { getCurrentUser, logoutUser, registerUser, loginUser } from '../utils/storage';
 
 interface AuthProviderProps {
     children: ReactNode;
 }
-export function AuthProvider({ children }: AuthProviderProps) {
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<string | null>(() => getCurrentUser());
 
     async function login(name: string, password: string): Promise<boolean> {
