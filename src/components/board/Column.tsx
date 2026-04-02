@@ -23,19 +23,21 @@ export const Column: FC<ColumnProps> = ({
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(column.title);
     
-    function handleSave() {
-    const trimTitle = title.trim();
+    const handleSave = (): void => {
+        const trimTitle = title.trim();
 
-    if (!trimTitle) {
-      return;
-    }
+        if (!trimTitle) {
+            return;
+        }
 
-    updateColumn(workspaceId, column.id, trimTitle);
-    setIsEditing(false);
-    }
+        updateColumn(workspaceId, column.id, trimTitle);
+        setIsEditing(false);
+    };
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setTitle(event.currentTarget.value);
-    }
+    };
+
     return (
         <div className="board-column">
             <div className="column-header">

@@ -18,7 +18,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  async function handleSubmit(event: React.SyntheticEvent<HTMLFormElement>) {
+  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setError("");
 

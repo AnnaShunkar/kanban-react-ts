@@ -12,22 +12,22 @@ export const WorkspaceList: FC = () => {
         return <p>No workspaces yet.</p>
     }
 
-    function startEdit(id: string, currentTitle: string) {
-    setEditingId(id);
-    setTitle(currentTitle);
-  }
+    const startEdit = (id: string, currentTitle: string): void => {
+        setEditingId(id);
+        setTitle(currentTitle);
+    };
 
-  function saveEdit(workspaceId: string) {
-    const trimmedTitle = title.trim();
+    const saveEdit = (workspaceId: string): void => {
+        const trimmedTitle = title.trim();
 
-    if (!trimmedTitle) {
-      return;
-    }
+        if (!trimmedTitle) {
+            return;
+        }
 
-    updateWorkspace(workspaceId, trimmedTitle);
-    setEditingId(null);
-    setTitle("");
-  }
+        updateWorkspace(workspaceId, trimmedTitle);
+        setEditingId(null);
+        setTitle("");
+    };
 
     return (
     <ul className="workspace-list">

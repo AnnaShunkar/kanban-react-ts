@@ -28,16 +28,17 @@ export const TaskCard: FC<TaskCardProps> = ({
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(title);
 
-    function handleSave() {
-    const trimValue = value.trim();
+    const handleSave = (): void => {
+        const trimValue = value.trim();
 
-    if (!trimValue) {
-      return;
-    }
+        if (!trimValue) {
+            return;
+        }
 
-    updateTask(workspaceId, columnId, taskId, trimValue);
-    setIsEditing(false);
-  }
+        updateTask(workspaceId, columnId, taskId, trimValue);
+        setIsEditing(false);
+    };
+
     return (
         <div className="task-card">
             {canMoveLeft && (

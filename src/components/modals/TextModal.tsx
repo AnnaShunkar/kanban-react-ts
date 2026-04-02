@@ -23,7 +23,7 @@ export const TextModal: FC<TextModalProps> =({
     const [value, setValue] = useState(initialValue);
     const [error, setError] = useState("");
 
-    function getValidationError(rawValue: string): string {
+    const getValidationError = (rawValue: string): string => {
         const trimValue = rawValue.trim();
 
         if (!trimValue) {
@@ -31,7 +31,7 @@ export const TextModal: FC<TextModalProps> =({
         }
 
         return validate(trimValue) ?? "";
-    }
+    };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.currentTarget.value;
@@ -42,7 +42,7 @@ export const TextModal: FC<TextModalProps> =({
         }
     };
 
-    const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>): void => {
         event.preventDefault();
 
         const validError = getValidationError(value);

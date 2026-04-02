@@ -9,27 +9,27 @@ interface AuthProviderProps {
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const [user, setUser] = useState<string | null>(() => getCurrentUser());
 
-    async function login(name: string, password: string): Promise<boolean> {
+    const login = async (name: string, password: string): Promise<boolean> => {
         const successLogin = await loginUser(name, password);
 
         if (successLogin) {
             setUser(name);
         }
         return successLogin;
-    }
+    };
 
-    async function register(name: string, email: string, password: string): Promise<boolean> {
+    const register = async (name: string, email: string, password: string): Promise<boolean> => {
         const successRegistration = await registerUser({ name, email, password });
         if (successRegistration) {
             setUser(name);
         }
         return successRegistration;
-    }
+    };
 
-    function logout(): void {
+    const logout = (): void => {
         logoutUser();
         setUser(null);
-    }
+    };
 
     return (
         <AuthContext.Provider value={{ user, login, register, logout }}>

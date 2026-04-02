@@ -19,11 +19,12 @@ export const BaseModal: FC<BaseModalProps> = ({
     showCloseButton = true,
     closeOnBackdrop = true,
 }) => {
-    function handelBackdropClick() {
+    const handelBackdropClick = (): void => {
         if (closeOnBackdrop) {
             onClose();
         }
     };
+
     return createPortal(
         <div className="modal-backdrop" onClick={handelBackdropClick} style={{zIndex}}>
             <div className="modal" onClick={(event) => event.stopPropagation()}>

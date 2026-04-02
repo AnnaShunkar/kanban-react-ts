@@ -12,30 +12,32 @@ interface WorkspacesProviderProps {
 export const WorkspacesProvider: FC<WorkspacesProviderProps> = ({ children }) => {
     const [workspaces, setWorkspaces] = useState<Workspace[]>(mockWorkspaces);
 //WORKSPACES
-    function getWorkspaceById(workspaceId: string): Workspace | undefined {
+    const getWorkspaceById = (workspaceId: string): Workspace | undefined => {
         return workspaces.find((workspace) => workspace.id === workspaceId);
-    }
+    };
 
-    function addWorkspace(title: string): void {
+    const addWorkspace = (title: string): void => {
         const newWorkspace: Workspace = {
             id: crypto.randomUUID(),
             title,
             columns: [],
         };
         setWorkspaces((prev) => [...prev, newWorkspace]);
-    }
-    function updateWorkspace(workspaceId: string, newTitle: string): void{
+    };
+
+    const updateWorkspace = (workspaceId: string, newTitle: string): void => {
         setWorkspaces((prev) =>
             prev.map((workspace) => workspace.id === workspaceId
                 ? { ...workspace, title: newTitle }
                 : workspace));
-    }
-    function deleteWorkspace(workspaceId: string): void{
+    };
+
+    const deleteWorkspace = (workspaceId: string): void => {
         setWorkspaces((prev) =>
             prev.filter((workspace) => workspace.id !== workspaceId));
-    }
+    };
 //COLUMNS
-    function addColumn (workspaceId: string, title: string): void {
+    const addColumn = (workspaceId: string, title: string): void => {
         setWorkspaces((prev) => prev.map((workspace) => workspace.id === workspaceId
             ? {
                 ...workspace,
@@ -46,8 +48,9 @@ export const WorkspacesProvider: FC<WorkspacesProviderProps> = ({ children }) =>
             }
             : workspace)
         );
-    }
-    function updateColumn(workspaceId: string, columnId: string, newTitle: string): void{
+    };
+
+    const updateColumn = (workspaceId: string, columnId: string, newTitle: string): void => {
         setWorkspaces((prev) =>
             prev.map((workspace) =>
                 workspace.id === workspaceId
@@ -61,24 +64,25 @@ export const WorkspacesProvider: FC<WorkspacesProviderProps> = ({ children }) =>
                     }
                     : workspace
             ));
-    }
-    function deleteColumn(workspaceId: string, columnId: string): void{
-    setWorkspaces((prev) =>
-      prev.map((workspace) =>
-        workspace.id === workspaceId
-          ? {
-              ...workspace,
-              columns: workspace.columns.filter(
-                (column) => column.id !== columnId
-              ),
-            }
-          : workspace
-      )
-    );
-    }
+    };
+
+    const deleteColumn = (workspaceId: string, columnId: string): void => {
+        setWorkspaces((prev) =>
+            prev.map((workspace) =>
+                workspace.id === workspaceId
+                    ? {
+                        ...workspace,
+                        columns: workspace.columns.filter(
+                            (column) => column.id !== columnId
+                        ),
+                    }
+                    : workspace
+            )
+        );
+    };
 
 //TASKS 
-    function addTask(workspaceId: string, columnId: string, title: string): void {
+    const addTask = (workspaceId: string, columnId: string, title: string): void => {
         setWorkspaces((prev) =>
             prev.map((workspace) =>
                 workspace.id === workspaceId
@@ -99,69 +103,78 @@ export const WorkspacesProvider: FC<WorkspacesProviderProps> = ({ children }) =>
                     : workspace
             )
         );
-    }
-    function updateTask(workspaceId: string, columnId: string, taskId: string, newTitle: string): void{
-            setWorkspaces((prev) =>
-      prev.map((workspace) =>
-        workspace.id === workspaceId
-          ? {
-              ...workspace,
-              columns: workspace.columns.map((column) =>
-                column.id === columnId
-                  ? {
-                      ...column,
-                      tasks: column.tasks.map((task) =>
-                        task.id === taskId
-                          ? { ...task, title: newTitle }
-                          : task
-                      ),
+    };
+
+    const updateTask = (
+        workspaceId: string,
+        columnId: string,
+        taskId: string,
+        newTitle: string
+    ): void => {
+        setWorkspaces((prev) =>
+            prev.map((workspace) =>
+                workspace.id === workspaceId
+                    ? {
+                        ...workspace,
+                        columns: workspace.columns.map((column) =>
+                            column.id === columnId
+                                ? {
+                                    ...column,
+                                    tasks: column.tasks.map((task) =>
+                                        task.id === taskId
+                                            ? { ...task, title: newTitle }
+                                            : task
+                                    ),
+                                }
+                                : column
+                        ),
                     }
-                  : column
-              ),
-            }
-          : workspace
-      )
-    );
-    }
-    function deleteTask(workspaceId: string, columnId: string, taskId: string): void{
-            setWorkspaces((prev) =>
-      prev.map((workspace) =>
-        workspace.id === workspaceId
-          ? {
-              ...workspace,
-              columns: workspace.columns.map((column) =>
-                column.id === columnId
-                  ? {
-                      ...column,
-                      tasks: column.tasks.filter((task) => task.id !== taskId),
+                    : workspace
+            )
+        );
+    };
+
+    const deleteTask = (workspaceId: string, columnId: string, taskId: string): void => {
+        setWorkspaces((prev) =>
+            prev.map((workspace) =>
+                workspace.id === workspaceId
+                    ? {
+                        ...workspace,
+                        columns: workspace.columns.map((column) =>
+                            column.id === columnId
+                                ? {
+                                    ...column,
+                                    tasks: column.tasks.filter((task) => task.id !== taskId),
+                                }
+                                : column
+                        ),
                     }
-                  : column
-              ),
-            }
-          : workspace
-      )
-    );
-    }
+                    : workspace
+            )
+        );
+    };
 //moving for tasks and columns
-    function moveTaskHandler(
+    const moveTaskHandler = (
         workspaceId: string,
         taskId: string,
         fromColumnId: string,
         direction: "left" | "right"
-    ): void {
+    ): void => {
         setWorkspaces((prev) =>
             moveTask(prev, workspaceId, taskId, fromColumnId, direction)
         );
-    }
-    function moveColumnsHandler(
+    };
+
+    const moveColumnsHandler = (
         workspaceId: string,
         columnId: string,
         direction: "left" | "right"
-    ): void {
+    ): void => {
         setWorkspaces((prev) =>
             moveColumns(prev, workspaceId, columnId, direction)
         );
-    }
+    };
+
     return (
         <WorkspacesContext.Provider
             value={{ workspaces, getWorkspaceById, addWorkspace, updateWorkspace, deleteWorkspace, addColumn, updateColumn, deleteColumn, addTask, updateTask, deleteTask, moveTask: moveTaskHandler, moveColumns: moveColumnsHandler}}
