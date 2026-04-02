@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
 import type { FC } from "react";
+import { validPassword } from "../../utils/validation";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -20,6 +21,12 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) =>  {
   const handleSubmit = async(event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setError("");
+
+    const validPasswordError = validPassword(password);
+    if (validPasswordError) {
+      setError(validPasswordError);
+      return;
+    }
 
     const success = await login(name.trim(), password.trim());
 

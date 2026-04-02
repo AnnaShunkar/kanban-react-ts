@@ -3,7 +3,7 @@ import { useState, type FC } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
-import { validPassword } from "../../utils/validation";
+import { validEmail, validPassword } from "../../utils/validation";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -22,6 +22,12 @@ export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
     event.preventDefault();
     setError("");
 
+    const validEmailError = validEmail(email);
+    if (validEmailError) {
+      setError(validEmailError);
+      return;
+    }
+
     const validPasswordError = validPassword(password);
     if (validPasswordError) {
       setError(validPasswordError);
@@ -33,12 +39,10 @@ export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
       email.trim(),
       password.trim()
     );
-
     if (!success) {
       setError("User already exists or data is invalid");
       return;
     }
-
     navigate("/workspaces");
   }
 
