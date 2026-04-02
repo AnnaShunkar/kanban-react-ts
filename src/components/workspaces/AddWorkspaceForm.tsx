@@ -11,31 +11,33 @@ export const AddWorkspaceForm: FC = () => {
     const [showTextModal, setShowTextModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     
+    const textModal = showTextModal ? (
+        <TextModal
+            title="Add Workspace"
+            submitLabel="Add"
+            placeholder="Workspace title"
+            onClose={() => setShowConfirmModal(true)}
+            onSubmit={(workspaceTitle) => {
+                addWorkspace(workspaceTitle);
+                setShowTextModal(false);
+            }}
+            validate={validWorkspaceTitle}
+        />
+    ) : null;
+    const confirmModal = showConfirmModal ? (
+        <ConfirmModal title="Leave?"
+            message="Close this modal?"
+            onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
+            onCancel={() => { setShowConfirmModal(false) }}
+        />
+    ) : null;
     return (
         <>
             <button className="add-button" type="button" onClick={() => setShowTextModal(true)}>
                 Add workspace
             </button>
-            {showTextModal && (
-                <TextModal
-                    title="Add Workspace"
-                    submitLabel="Add"
-                    placeholder="Workspace title"
-                    onClose={() => setShowConfirmModal(true)}
-                    onSubmit={(workspaceTitle) => {
-                        addWorkspace(workspaceTitle);
-                        setShowTextModal(false);
-                    }}
-                    validate={validWorkspaceTitle}
-                />
-            )}
-            {showConfirmModal && (
-                <ConfirmModal title="Leave?"
-                    message="Close this modal?"
-                    onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
-                    onCancel={() => { setShowConfirmModal(false) }}
-                />
-            )}
+            {textModal}
+            {confirmModal}
         </>
     );
 }

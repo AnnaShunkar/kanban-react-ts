@@ -15,32 +15,34 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({ workspaceId, columnId }) => 
     const [showTextModal, setShowTextModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
 
+    const textModal = showTextModal ? (
+        <TextModal
+            title="Add Task"
+            submitLabel="Add"
+            placeholder="Task text"
+            onClose={() => setShowConfirmModal(true)}
+            onSubmit={(taskTitle) => {
+                addTask(workspaceId, columnId, taskTitle);
+                setShowTextModal(false);
+            }}
+            validate={validTaskTitle}
+        />
+    ) : null;
+    const confirmModal = showConfirmModal ? (
+        <ConfirmModal title="Leave?"
+            message="Close task modal?"
+            onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
+            onCancel={() => { setShowConfirmModal(false) }}
+        />
+    ) : null;
 
     return (
         <>
             <button className="add-button" type="button" onClick={() => setShowTextModal(true)}>
                 Add task
             </button>
-            {showTextModal && (
-                <TextModal
-                    title="Add Task"
-                    submitLabel="Add"
-                    placeholder="Task text"
-                    onClose={() => setShowConfirmModal(true)}
-                    onSubmit={(taskTitle) => {
-                        addTask(workspaceId, columnId, taskTitle);
-                        setShowTextModal(false);
-                    }}
-                    validate={validTaskTitle}
-                />
-            )}
-            {showConfirmModal && (
-                <ConfirmModal title="Leave?"
-                    message="Close task modal?"
-                    onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
-                    onCancel={() => { setShowConfirmModal(false) }}
-                />
-            )}
+            {textModal}
+            {confirmModal}
         </>
     );
 };

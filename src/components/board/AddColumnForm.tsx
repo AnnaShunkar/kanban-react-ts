@@ -15,32 +15,35 @@ export const AddColumnForm: FC<AddColumnFormProps> = ({ workspaceId }) => {
     const { addColumn } = useWorkspaces();
     const [showTextModal, setShowTextModal] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+    const confirmModal = showConfirmModal ? (
+        <ConfirmModal title="Leave?"
+            message="Close column modal?"
+            onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
+            onCancel={() => { setShowConfirmModal(false) }}
+        />
+    ) : null;
+    const textModal = showTextModal ? (
+        <TextModal
+            title="Add Column"
+            submitLabel="Add"
+            placeholder="Column title"
+            onClose={() => setShowConfirmModal(true)}
+            onSubmit={(columnTitle) => {
+                addColumn(workspaceId, columnTitle);
+                setShowTextModal(false);
+            }}
+            validate={validColumnTitle}
+        />
+    ) : null;
    
        return (
            <>
                <button className="add-button" type="button" onClick={() => setShowTextModal(true)}> 
                    Add column
                </button>
-               {showTextModal && (
-                   <TextModal
-                       title="Add Column"
-                       submitLabel="Add"
-                       placeholder="Column title"
-                       onClose={() => setShowConfirmModal(true)}
-                       onSubmit={(columnTitle) => {
-                           addColumn(workspaceId, columnTitle);
-                           setShowTextModal(false);
-                       }}
-                       validate={validColumnTitle}
-                   />
-               )}
-               {showConfirmModal && (
-                   <ConfirmModal title="Leave?"
-                    message="Close column modal?"
-                    onConfirm={() => { setShowConfirmModal(false); setShowTextModal(false); }}
-                    onCancel={() => { setShowConfirmModal(false) }}
-                   />
-               )}
+               {textModal}
+               {confirmModal}
            </>
        );
 }
