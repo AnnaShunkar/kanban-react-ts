@@ -1,64 +1,66 @@
-import "../../styles/modal.css"
-import { useState } from "react";
+import "../../styles/modal.css";
+import type { FC } from "react";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
-import type { FC } from "react";
-import { validPassword } from "../../utils/validation";
 import { AppRoutes } from "../../utils/routes";
+import { loginSchema, type LoginFormValues,} from "../../schemas/authSchema";
 
 interface LoginModalProps {
   onClose: () => void;
 }
 
-export const LoginModal: FC<LoginModalProps> = ({ onClose }) =>  {
+export const LoginModal: FC<LoginModalProps> = ({ onClose }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const errorMessage = error ? <p className="form-error">{error}</p> : null;
-
-  const handleSubmit = async(event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-    setError("");
-
-    const validPasswordError = validPassword(password);
-    if (validPasswordError) {
-      setError(validPasswordError);
-      return;
-    }
-
-    const success = await login(name.trim(), password.trim());
+  const { register, handleSubmit, setError, formState: { errors }, } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      name: "",
+      password: "",
+    },
+  });
+  const submitForm = async (data: LoginFormValues): Promise<void> => {
+    const success = await login(data.name.trim(), data.password.trim());
 
     if (!success) {
-      setError("Wrong name or password");
+      setError("root", {
+        message: "Wrong name or password",
+      });
       return;
     }
 
     navigate(AppRoutes.Workspaces);
-  }
+  };
 
   return (
     <BaseModal title="Log in" onClose={onClose}>
-      <form onSubmit={handleSubmit} className="modal-form">
+      <form onSubmit={handleSubmit(submitForm)} className="modal-form">
         <input
           type="text"
           placeholder="Name"
-          value={name}
-          onChange={(event) => setName(event.currentTarget.value)}
+          {...register("name")}
         />
+
+        {errors.name?.message ? (
+          <p className="form-error">{errors.name.message}</p>
+        ) : null}
 
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.currentTarget.value)}
+          {...register("password")}
         />
+        {errors.password?.message ? (
+          <p className="form-error">{errors.password.message}</p>
+        ) : null}
 
-        {errorMessage}
+        {errors.root?.message ? (
+          <p className="form-error">{errors.root.message}</p>
+        ) : null}
 
         <button type="submit">Log in</button>
       </form>

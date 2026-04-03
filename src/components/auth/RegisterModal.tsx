@@ -1,79 +1,72 @@
 import "../../styles/modal.css"
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { BaseModal } from "../modals/BaseModal";
-import { validEmail, validPassword } from "../../utils/validation";
 import { AppRoutes } from "../../utils/routes";
+import { registerSchema, type RegisterFormValues } from "../../schemas/authSchema";
 
 interface RegisterModalProps {
   onClose: () => void;
 }
 
-export const RegisterModal: FC<RegisterModalProps> = ({onClose}) =>  {
-  const { register } = useAuth();
+export const RegisterModal: FC<RegisterModalProps> = ({ onClose }) => {
+  const { register: registerUser } = useAuth();
   const navigate = useNavigate();
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const errorMessage = error ? <p className="form-error">{error}</p> : null;
-
-  const handleSubmit = async (event: React.SyntheticEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault();
-    setError("");
-
-    const validEmailError = validEmail(email);
-    if (validEmailError) {
-      setError(validEmailError);
-      return;
-    }
-
-    const validPasswordError = validPassword(password);
-    if (validPasswordError) {
-      setError(validPasswordError);
-      return;
-    }
-
-    const success = await register(
-      name.trim(),
-      email.trim(),
-      password.trim()
-    );
+  const { register, handleSubmit, setError, formState: { errors }, } = useForm<RegisterFormValues>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: ""
+    },
+  });
+  const submitForm = async (data: RegisterFormValues): Promise<void> => {
+    const success = await registerUser(data.name.trim(), data.email.trim(), data.password.trim());
     if (!success) {
-      setError("User already exists or data is invalid");
+      setError("root", { message: "User already exists or data is invalid", });
       return;
     }
+
     navigate(AppRoutes.Workspaces);
-  }
+  };
 
   return (
     <BaseModal title="Register" onClose={onClose}>
-      <form onSubmit={handleSubmit} className="modal-form">
+      <form onSubmit={handleSubmit(submitForm)} className="modal-form">
         <input
           type="text"
           placeholder="Name"
-          value={name}
-          onChange={(event) => setName(event.currentTarget.value)}
+          {...register("name")}
         />
+        {errors.name?.message ? (
+          <p className="form-error">{ errors.name.message}</p>
+        ): null}
 
         <input
           type="email"
           placeholder="Email"
-          value={email}
-          onChange={(event) => setEmail(event.currentTarget.value)}
+          {...register("email")}
         />
+        {errors.email?.message ? (
+          <p className="form-error">{ errors.email.message}</p>
+        ): null}
 
         <input
           type="password"
           placeholder="Password"
-          value={password}
-          onChange={(event) => setPassword(event.currentTarget.value)}
+          {...register("password")}
         />
-
-        {errorMessage}
+        {errors.password?.message ? (
+          <p className="form-error">{ errors.password.message}</p>
+        ) : null}
+        
+        {errors.root?.message ? (
+          <p className="form-error">{errors.root.message}</p>
+        ) : null}
 
         <button type="submit">Register</button>
       </form>
