@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { AuthState } from "../types/auth";
 import { getCurrentUser, loginUser, registerUser, logoutUser } from "../utils/storage";
+import { useWorkspacesStore } from "./workspacesStore";
 export const useAuthStore = create<AuthState>((set) => ({
     user: getCurrentUser(),
 
@@ -8,6 +9,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         const successLogin = await loginUser(name, password);
 
         if (successLogin) {
+            useWorkspacesStore.getState().resetWorkspaces();
             set({user: name});
         }
         return successLogin;
@@ -16,6 +18,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     register: async (name: string, email: string, password: string): Promise<boolean> => {
         const successRegistration = await registerUser({ name, email, password });
         if (successRegistration) {
+            useWorkspacesStore.getState().resetWorkspaces();
             set({user: name});
         }
         return successRegistration;
@@ -23,6 +26,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     logout: (): void => {
         logoutUser();
+        useWorkspacesStore.getState().resetWorkspaces();
         set({user: null});
     },
 }));

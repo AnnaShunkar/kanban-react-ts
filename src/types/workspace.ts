@@ -8,6 +8,7 @@ export interface Workspace {
 export interface WorkspacesState {
     workspaces: Workspace[];
     getWorkspaceById: (workspaceId: string) => Workspace | undefined;
+    resetWorkspaces: () => void;
 
     addWorkspace: (title: string) => void;
     updateWorkspace(workspaceId: string, newTitle: string): void;

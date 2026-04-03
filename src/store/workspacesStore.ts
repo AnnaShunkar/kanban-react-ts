@@ -4,12 +4,18 @@ import type { Workspace, WorkspacesState } from "../types/workspace";
 import { moveTask } from "../utils/tasks";
 import { moveColumns } from "../utils/columns";
 
+const getInitialWorkspaces = (): Workspace[] => structuredClone(mockWorkspaces);
+
 export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
     //WORKSPACES
-    workspaces: mockWorkspaces,
+    workspaces: getInitialWorkspaces(),
         
     getWorkspaceById: (workspaceId: string): Workspace | undefined => {
         return get().workspaces.find((workspace) => workspace.id === workspaceId);
+    },
+
+    resetWorkspaces: (): void => {
+        set({ workspaces: getInitialWorkspaces() });
     },
 
     addWorkspace: (title: string): void => {
