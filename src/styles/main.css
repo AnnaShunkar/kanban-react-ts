@@ -88,7 +88,7 @@ footer {
     margin-top: auto;
 }
 
-/* AUTH */
+/* AUTH LOGOUT*/
 .auth-section {
     display: flex;
     flex-direction: row;
@@ -96,7 +96,8 @@ footer {
     justify-content: center;
 }
 
-.auth-button {
+.auth-button,
+.logout-button {
     background: transparent;
     color: var(--accent-color);
     border: 2px solid var(--accent-color);
@@ -107,13 +108,17 @@ footer {
     margin-top: 20px;
 }
 
-.auth-button:hover {
+.auth-button:hover,
+.logout-button:hover {
     background-color: var(--accent-color);
     color: var(--color-body);
 }
 
 .auth-button.hidden {
     display: none;
+}
+.logout-button{
+    margin-bottom: 20px;
 }
 
 /* INPUT */

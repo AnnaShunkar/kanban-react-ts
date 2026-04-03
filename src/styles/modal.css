@@ -1,3 +1,17 @@
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
 .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -87,6 +101,11 @@
     min-height: 20px;
     color: #c62828;
     font-size: 14px;
+
+    animation-name: pulse;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
 .add-button{
     margin-top: 8px;
