@@ -2,10 +2,11 @@ import { useState, type FC } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/workspaces.css"
 import "../../styles/modal.css"
-import { validWorkspaceTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
 import { ModalKeys } from "../../utils/modalKeys";
+import { zodResolver } from "@hookform/resolvers/zod/src/zod.js";
+import { workspaceFormSchema } from "../../schemas/entitySchema";
 
 export const AddWorkspaceForm: FC = () => {
     const { addWorkspace } = useWorkspaces();
@@ -22,7 +23,7 @@ export const AddWorkspaceForm: FC = () => {
                 addWorkspace(workspaceTitle);
                 setActiveModal(null);
             }}
-            validate={validWorkspaceTitle}
+            resolver={zodResolver(workspaceFormSchema)}
         />
     ) : null;
 

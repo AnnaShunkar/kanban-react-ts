@@ -1,75 +1,62 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
+import { useForm, type SubmitHandler, type Resolver,} from "react-hook-form";
 import { BaseModal } from "./BaseModal";
 
-interface TextModalProps { 
-    title: string;
-    submitLabel: string;
-    initialValue?: string;
-    placeholder?: string;
-    onClose: () => void;
-    onSubmit: (value: string) => void;
-    validate: (value: string) => string | null;
+interface TextModalFormValues {
+  value: string;
 }
 
-export const TextModal: FC<TextModalProps> =({
-    title,
-    submitLabel,
-    initialValue = "",
-    placeholder = "Enter text...",
-    onClose,
-    onSubmit,
-    validate,
+interface TextModalProps {
+  title: string;
+  submitLabel: string;
+  initialValue?: string;
+  placeholder?: string;
+  onClose: () => void;
+  onSubmit: (value: string) => void;
+  resolver: Resolver<TextModalFormValues>;
+}
+
+export const TextModal: FC<TextModalProps> = ({
+  title,
+  submitLabel,
+  initialValue = "",
+  placeholder = "Enter text...",
+  onClose,
+  onSubmit,
+  resolver,
 }) => {
-    const [value, setValue] = useState(initialValue);
-    const [error, setError] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TextModalFormValues>({
+    resolver,
+    defaultValues: {
+      value: initialValue,
+    },
+  });
 
-    const errorMessage = error ? <p className="form-error">{error}</p> : null;
+  const submitForm: SubmitHandler<TextModalFormValues> = (data) => {
+    onSubmit(data.value.trim());
+  };
 
-    const getValidationError = (rawValue: string): string => {
-        const trimValue = rawValue.trim();
+  const errorMessage = errors.value?.message ? (
+    <p className="form-error">{errors.value.message}</p>
+  ) : null;
 
-        if (!trimValue) {
-            return "Field cannot be empty";
-        }
+  return (
+    <BaseModal title={title} onClose={onClose} zIndex={1000}>
+      <form onSubmit={handleSubmit(submitForm)} className="modal-form">
+        <input
+          type="text"
+          placeholder={placeholder}
+          {...register("value")}
+        />
 
-        return validate(trimValue) ?? "";
-    };
+        {errorMessage}
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = event.currentTarget.value;
-        setValue(newValue);
-
-        if (error) {
-            setError(getValidationError(newValue));
-        }
-    };
-
-    const handleSubmit = (event: React.SyntheticEvent<HTMLFormElement>): void => {
-        event.preventDefault();
-
-        const validError = getValidationError(value);
-        if (validError) {
-            setError(validError);
-            return;
-        }
-
-        const trimValue = value.trim();
-        setError("");
-        onSubmit(trimValue);
-    };
-
-    return (
-        <BaseModal title={title} onClose={onClose} zIndex={1000}>
-            <form onSubmit={handleSubmit} className="modal-form">
-                <input
-                    type="text"
-                    value={value}
-                    placeholder={placeholder}
-                    onChange={handleChange}
-                />
-                {errorMessage}
-                <button type="submit">{submitLabel}</button>
-            </form>
-        </BaseModal>
-    )
-}
+        <button type="submit">{submitLabel}</button>
+      </form>
+    </BaseModal>
+  );
+};

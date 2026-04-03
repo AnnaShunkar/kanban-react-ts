@@ -2,10 +2,11 @@ import { useState, type FC } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/modal.css"
 import "../../styles/board.css"
-import { validColumnTitle } from "../../utils/validation";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
 import { ModalKeys } from "../../utils/modalKeys";
+import { columnFormSchema } from "../../schemas/entitySchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 
 interface AddColumnFormProps{
@@ -38,7 +39,7 @@ export const AddColumnForm: FC<AddColumnFormProps> = ({ workspaceId }) => {
                 addColumn(workspaceId, columnTitle);
                 setActiveModal(null);
             }}
-            validate={validColumnTitle}
+            resolver={zodResolver(columnFormSchema)}
         />
     ) : null;
    

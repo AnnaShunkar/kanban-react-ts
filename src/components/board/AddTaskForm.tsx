@@ -2,10 +2,11 @@ import { useState, type FC } from "react";
 import { useWorkspaces } from "../../hooks/useWorkspaces";
 import "../../styles/modal.css"
 import "../../styles/board.css"
-import { validTaskTitle } from "../../utils/validation";
+import { taskFormSchema } from "../../schemas/entitySchema";
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
 import { ModalKeys } from "../../utils/modalKeys";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 interface AddTaskFormProps{
     workspaceId: string;
@@ -26,7 +27,7 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({ workspaceId, columnId }) => 
                 addTask(workspaceId, columnId, taskTitle);
                 setActiveModal(null);
             }}
-            validate={validTaskTitle}
+            resolver={zodResolver(taskFormSchema)}
         />
     ) : null;
 
