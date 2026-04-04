@@ -5,7 +5,7 @@ import "../../styles/modal.css"
 import { TextModal } from "../modals/TextModal";
 import { ConfirmModal } from "../modals/ConfirmModal";
 import { ModalKeys } from "../../utils/modalKeys";
-import { zodResolver } from "@hookform/resolvers/zod/src/zod.js";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { workspaceFormSchema } from "../../schemas/entitySchema";
 
 export const AddWorkspaceForm: FC = () => {
