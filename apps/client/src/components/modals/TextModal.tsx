@@ -12,7 +12,7 @@ interface TextModalProps {
   initialValue?: string;
   placeholder?: string;
   onClose: () => void;
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string) => Promise<void>;
   resolver: Resolver<TextModalFormValues>;
 }
 
@@ -36,8 +36,8 @@ export const TextModal: FC<TextModalProps> = ({
     },
   });
 
-  const submitForm: SubmitHandler<TextModalFormValues> = (data) => {
-    onSubmit(data.value.trim());
+  const submitForm: SubmitHandler<TextModalFormValues> = async (data) => {
+    await onSubmit(data.value.trim());
   };
 
   const errorMessage = errors.value?.message ? (

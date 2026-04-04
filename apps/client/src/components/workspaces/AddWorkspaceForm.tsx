@@ -19,8 +19,8 @@ export const AddWorkspaceForm: FC = () => {
             submitLabel="Add"
             placeholder="Workspace title"
             onClose={() => setActiveConfirmModal(ModalKeys.AddWorkspaceConfirm)}
-            onSubmit={(workspaceTitle) => {
-                addWorkspace(workspaceTitle);
+            onSubmit={async (workspaceTitle) => {
+                await addWorkspace(workspaceTitle);
                 setActiveModal(null);
             }}
             resolver={zodResolver(workspaceFormSchema)}
