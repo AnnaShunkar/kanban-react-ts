@@ -36,6 +36,13 @@ export class WorkspacesService {
         title: createWorkspaceDto.title,
         userId: createWorkspaceDto.userId,
       },
+      include: {
+        columns: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
     });
   }
   async update(id: string, updateWorkspaceDto: UpdateWorkspaceDto) {
