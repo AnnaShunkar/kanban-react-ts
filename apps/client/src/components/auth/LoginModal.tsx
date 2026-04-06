@@ -2,11 +2,11 @@ import "../../styles/modal.css";
 import type { FC } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
-import { AppRoutes } from "../../utils/routes";
-import { loginSchema, type LoginFormValues,} from "../../schemas/authSchema";
+import { AppRoute } from "../../utils/routes";
+import { type LoginFormValues,} from "../../schemas/authSchema";
+import { loginResolver } from "../../schemas/formResolvers";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -17,7 +17,7 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
   const { register, handleSubmit, setError, formState: { errors }, } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: loginResolver,
     defaultValues: {
       name: "",
       password: "",
@@ -33,7 +33,7 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) => {
       return;
     }
 
-    navigate(AppRoutes.Workspaces);
+    navigate(AppRoute.WORKSPACES);
   };
 
   return (

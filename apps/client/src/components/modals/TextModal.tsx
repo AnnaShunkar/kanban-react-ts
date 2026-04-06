@@ -1,6 +1,8 @@
-import { type FC } from "react";
-import { useForm, type SubmitHandler, type Resolver,} from "react-hook-form";
-import { BaseModal } from "./BaseModal";
+import { type FC } from 'react';
+import { useForm, type SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { z } from 'zod';
+import { BaseModal } from './BaseModal';
 
 interface TextModalFormValues {
   value: string;
@@ -12,25 +14,27 @@ interface TextModalProps {
   initialValue?: string;
   placeholder?: string;
   onClose: () => void;
-  onSubmit: (value: string) => Promise<void>;
-  resolver: Resolver<TextModalFormValues>;
+  onSubmit: (value: string) => Promise<void> | void;
+  schema: z.ZodObject<{
+    value: z.ZodString;
+  }>;
 }
 
 export const TextModal: FC<TextModalProps> = ({
   title,
   submitLabel,
-  initialValue = "",
-  placeholder = "Enter text...",
+  initialValue = '',
+  placeholder = 'Enter text...',
   onClose,
   onSubmit,
-  resolver,
+  schema,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<TextModalFormValues>({
-    resolver,
+    resolver: zodResolver(schema),
     defaultValues: {
       value: initialValue,
     },
@@ -47,11 +51,7 @@ export const TextModal: FC<TextModalProps> = ({
   return (
     <BaseModal title={title} onClose={onClose} zIndex={1000}>
       <form onSubmit={handleSubmit(submitForm)} className="modal-form">
-        <input
-          type="text"
-          placeholder={placeholder}
-          {...register("value")}
-        />
+        <input type="text" placeholder={placeholder} {...register('value')} />
 
         {errorMessage}
 

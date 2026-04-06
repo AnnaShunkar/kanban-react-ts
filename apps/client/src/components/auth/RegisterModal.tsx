@@ -3,10 +3,10 @@ import { type FC } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { BaseModal } from "../modals/BaseModal";
-import { AppRoutes } from "../../utils/routes";
-import { registerSchema, type RegisterFormValues } from "../../schemas/authSchema";
+import { AppRoute } from "../../utils/routes";
+import { type RegisterFormValues } from "../../schemas/authSchema";
+import { registerResolver } from "../../schemas/formResolvers";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -17,7 +17,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({ onClose }) => {
   const navigate = useNavigate();
 
   const { register, handleSubmit, setError, formState: { errors }, } = useForm<RegisterFormValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: registerResolver,
     defaultValues: {
       name: "",
       email: "",
@@ -31,7 +31,7 @@ export const RegisterModal: FC<RegisterModalProps> = ({ onClose }) => {
       return;
     }
 
-    navigate(AppRoutes.Workspaces);
+    navigate(AppRoute.WORKSPACES);
   };
 
   return (

@@ -5,7 +5,7 @@ import { useWorkspaces } from "../hooks/useWorkspaces";
 import {AddWorkspaceForm} from "../components/workspaces/AddWorkspaceForm";
 import {WorkspaceList} from "../components/workspaces/WorkspaceList";
 import "../styles/main.css"
-import { AppRoutes } from "../utils/routes";
+import { AppRoute } from "../utils/routes";
 
 export const WorkspacesPage: FC = () => {
     const { logout } = useAuth();
@@ -18,7 +18,7 @@ export const WorkspacesPage: FC = () => {
 
     const handleLogout = (): void => {
         logout();
-        navigate(AppRoutes.Home);
+        navigate(AppRoute.HOME);
     }
 
     if (isLoading) {

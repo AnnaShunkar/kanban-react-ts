@@ -1,8 +1,8 @@
-export enum AppRoutes {
-    Home = "/",
-    Workspaces = "/workspaces",
-    WorkspaceId = "/workspaces/:workspaceId",
+export enum AppRoute {
+    HOME = "/",
+    WORKSPACES = "/workspaces",
+    WORKSPACE = "/workspaces/:workspaceId",
 }
 
 export const getWorkspaceRoute = (workspaceId: string): string =>
-    `/workspaces/${workspaceId}`;
+    AppRoute.WORKSPACE.replace(":workspaceId", workspaceId);
