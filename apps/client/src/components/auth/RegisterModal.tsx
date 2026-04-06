@@ -1,12 +1,11 @@
 import "../../styles/modal.css"
 import { type FC } from "react";
 import { useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
 import { AppRoute } from "../../utils/routes";
-import { type RegisterFormValues } from "../../schemas/authSchema";
-import { registerResolver } from "../../schemas/formResolvers";
+import { registerSchema, type RegisterFormValues } from "../../schemas/authSchema";
+import { useReactForm } from "../../hooks/useReacForm";
 
 interface RegisterModalProps {
   onClose: () => void;
@@ -16,8 +15,8 @@ export const RegisterModal: FC<RegisterModalProps> = ({ onClose }) => {
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, setError, formState: { errors }, } = useForm<RegisterFormValues>({
-    resolver: registerResolver,
+  const { register, handleSubmit, setError, formState: { errors }, } = useReactForm({
+    schema: registerSchema,
     defaultValues: {
       name: "",
       email: "",

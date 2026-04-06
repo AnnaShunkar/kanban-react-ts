@@ -1,8 +1,8 @@
 import { type FC } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { type SubmitHandler } from 'react-hook-form';
 import type { z } from 'zod';
 import { BaseModal } from './BaseModal';
+import { useReactForm } from '../../hooks/useReacForm';
 
 interface TextModalFormValues {
   value: string;
@@ -33,8 +33,8 @@ export const TextModal: FC<TextModalProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<TextModalFormValues>({
-    resolver: zodResolver(schema),
+  } = useReactForm({
+    schema,
     defaultValues: {
       value: initialValue,
     },

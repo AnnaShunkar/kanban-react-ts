@@ -1,12 +1,11 @@
 import "../../styles/modal.css";
 import type { FC } from "react";
 import { useNavigate } from "react-router";
-import { useForm } from "react-hook-form";
 import { useAuth } from "../../hooks/useAuth";
 import { BaseModal } from "../modals/BaseModal";
 import { AppRoute } from "../../utils/routes";
-import { type LoginFormValues,} from "../../schemas/authSchema";
-import { loginResolver } from "../../schemas/formResolvers";
+import { loginSchema, type LoginFormValues,} from "../../schemas/authSchema";
+import { useReactForm } from "../../hooks/useReacForm";
 
 interface LoginModalProps {
   onClose: () => void;
@@ -16,8 +15,8 @@ export const LoginModal: FC<LoginModalProps> = ({ onClose }) => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const { register, handleSubmit, setError, formState: { errors }, } = useForm<LoginFormValues>({
-    resolver: loginResolver,
+  const { register, handleSubmit, setError, formState: { errors }, } = useReactForm({
+    schema: loginSchema,
     defaultValues: {
       name: "",
       password: "",
