@@ -1,61 +1,59 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { randomUUID } from 'crypto';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
 import { UpdateWorkspaceDto } from './dto/update-workspace.dto';
+import { Workspace } from '../../database/entities';
 
 @Injectable()
 export class WorkspacesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @InjectRepository(Workspace)
+    private readonly workspacesRepository: Repository<Workspace>,
+  ) {}
 
   async findAll() {
-    return this.prisma.workspace.findMany({
-      include: {
+    return this.workspacesRepository.find({
+      relations: {
         columns: {
-          include: {
-            tasks: true,
-          },
+          tasks: true,
         },
       },
     });
   }
+
   async findOne(id: string) {
-    return this.prisma.workspace.findUnique({
+    return this.workspacesRepository.findOne({
       where: { id },
-      include: {
+      relations: {
         columns: {
-          include: {
-            tasks: true,
-          },
+          tasks: true,
         },
       },
     });
   }
+
   async create(createWorkspaceDto: CreateWorkspaceDto) {
-    return this.prisma.workspace.create({
-      data: {
-        title: createWorkspaceDto.title,
-        userId: createWorkspaceDto.userId,
-      },
-      include: {
-        columns: {
-          include: {
-            tasks: true,
-          },
-        },
-      },
+    const workspace = this.workspacesRepository.create({
+      id: randomUUID(),
+      title: createWorkspaceDto.title,
+      userId: createWorkspaceDto.userId,
     });
+    const createdWorkspace = await this.workspacesRepository.save(workspace);
+    return this.findOne(createdWorkspace.id);
   }
+
   async update(id: string, updateWorkspaceDto: UpdateWorkspaceDto) {
-    return this.prisma.workspace.update({
-      where: { id },
-      data: {
-        title: updateWorkspaceDto.title,
-      },
-    });
+    await this.workspacesRepository.update(id, { title: updateWorkspaceDto.title });
+    return this.findOne(id);
   }
+
   async remove(id: string) {
-    return this.prisma.workspace.delete({
-      where: { id },
-    });
+    const workspace = await this.findOne(id);
+    if (workspace) {
+      await this.workspacesRepository.remove(workspace);
+    }
+    return workspace;
   }
 }

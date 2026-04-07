@@ -49,14 +49,14 @@ export const TaskCard: FC<TaskCardProps> = ({
         </button>
     ) : null;
 
-    const handleSave = (): void => {
+    const handleSave = async (): Promise<void> => {
         const trimValue = value.trim();
 
         if (!trimValue) {
             return;
         }
 
-        updateTask(workspaceId, columnId, taskId, trimValue);
+        await updateTask(workspaceId, columnId, taskId, trimValue);
         setIsEditing(false);
     };
 
@@ -69,7 +69,7 @@ export const TaskCard: FC<TaskCardProps> = ({
                 <button  className="e-d-button"
                 type="button"
                 onClick={() =>
-                    isEditing ? handleSave() : setIsEditing(true)
+                    isEditing ? void handleSave() : setIsEditing(true)
                 }
             >
                 {isEditing ? "Save" : "Edit"}
@@ -77,7 +77,7 @@ export const TaskCard: FC<TaskCardProps> = ({
 
             <button className="e-d-button"
                 type="button"
-                onClick={() => deleteTask(workspaceId, columnId, taskId)}
+                onClick={() => void deleteTask(workspaceId, columnId, taskId)}
             >
                 Delete
             </button>

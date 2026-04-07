@@ -23,14 +23,14 @@ export const Column: FC<ColumnProps> = ({
     const [isEditing, setIsEditing] = useState(false);
     const [title, setTitle] = useState(column.title);
     
-    const handleSave = (): void => {
+    const handleSave = async (): Promise<void> => {
         const trimTitle = title.trim();
 
         if (!trimTitle) {
             return;
         }
 
-        updateColumn(workspaceId, column.id, trimTitle);
+        await updateColumn(workspaceId, column.id, trimTitle);
         setIsEditing(false);
     };
 
@@ -76,7 +76,7 @@ export const Column: FC<ColumnProps> = ({
             </div>
             <div className="edit-buttons">
                 {isEditing ? (
-                    <button className="e-d-button" type="button" onClick={handleSave}>
+                    <button className="e-d-button" type="button" onClick={() => void handleSave()}>
                         Save
                     </button>
                 ) : (
@@ -87,7 +87,7 @@ export const Column: FC<ColumnProps> = ({
 
                 <button className="e-d-button"
                     type="button"
-                    onClick={() => deleteColumn(workspaceId, column.id)}
+                    onClick={() => void deleteColumn(workspaceId, column.id)}
                 >
                     Delete
                 </button>

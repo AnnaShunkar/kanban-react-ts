@@ -27,8 +27,8 @@ export const AddTaskForm: FC<AddTaskFormProps> = ({
         submitLabel="Add"
         placeholder="Task text"
         onClose={() => setActiveConfirmModal(ModalKeys.AddTaskConfirm)}
-        onSubmit={(taskTitle) => {
-          addTask(workspaceId, columnId, taskTitle);
+        onSubmit={async (taskTitle) => {
+          await addTask(workspaceId, columnId, taskTitle);
           setActiveModal(null);
         }}
         schema={taskFormSchema}

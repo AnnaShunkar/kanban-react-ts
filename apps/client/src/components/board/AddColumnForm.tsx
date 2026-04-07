@@ -39,8 +39,8 @@ export const AddColumnForm: FC<AddColumnFormProps> = ({ workspaceId }) => {
         submitLabel="Add"
         placeholder="Column title"
         onClose={() => setActiveConfirmModal(ModalKeys.AddColumnConfirm)}
-        onSubmit={(columnTitle) => {
-          addColumn(workspaceId, columnTitle);
+        onSubmit={async (columnTitle) => {
+          await addColumn(workspaceId, columnTitle);
           setActiveModal(null);
         }}
         schema={columnFormSchema}

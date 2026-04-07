@@ -1,31 +1,54 @@
 import { create } from "zustand";
 import type { AuthState } from "../types/auth";
-import { getCurrentUser, loginUser, registerUser, logoutUser } from "../utils/storage";
+import { hashPassword } from "../utils/crypto";
+import { createUser, getUserByName } from "../utils/api";
 import { useWorkspacesStore } from "./workspacesStore";
 export const useAuthStore = create<AuthState>((set) => ({
-    user: getCurrentUser(),
+    user: localStorage.getItem("user"),
 
     login: async (name: string, password: string): Promise<boolean> => {
-        const successLogin = await loginUser(name, password);
-
-        if (successLogin) {
-            useWorkspacesStore.getState().resetWorkspaces();
-            set({user: name});
+        try {
+            const savedUser = await getUserByName(name);
+            if (!savedUser) {
+                return false;
+            }
+            const hashedInput = await hashPassword(password);
+            const successLogin = savedUser.password === hashedInput;
+            if (successLogin) {
+                localStorage.setItem("user", name);
+                useWorkspacesStore.getState().resetWorkspaces();
+                set({user: name});
+            }
+            return successLogin;
+        } catch {
+            return false;
         }
-        return successLogin;
     },
 
     register: async (name: string, email: string, password: string): Promise<boolean> => {
-        const successRegistration = await registerUser({ name, email, password });
-        if (successRegistration) {
+        try {
+            const existingUser = await getUserByName(name);
+            if (existingUser) {
+                return false;
+            }
+        } catch {
+            // If user is not found or API temporarily errors, continue and try create.
+        }
+
+        try {
+            const hashedPassword = await hashPassword(password);
+            await createUser({ name, email, password: hashedPassword });
+            localStorage.setItem("user", name);
             useWorkspacesStore.getState().resetWorkspaces();
             set({user: name});
+            return true;
+        } catch {
+            return false;
         }
-        return successRegistration;
     },
 
     logout: (): void => {
-        logoutUser();
+        localStorage.removeItem("user");
         useWorkspacesStore.getState().resetWorkspaces();
         set({user: null});
     },

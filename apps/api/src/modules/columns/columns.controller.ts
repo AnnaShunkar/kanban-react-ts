@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -29,5 +30,9 @@ export class ColumnsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateColumnDto: UpdateColumnDto) {
     return this.columnsService.update(id, updateColumnDto);
+  }
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.columnsService.remove(id);
   }
 }

@@ -4,9 +4,16 @@ import type { Workspace, WorkspacesState } from '../types/workspace';
 import { moveTask } from '../utils/tasks';
 import { moveColumns } from '../utils/columns';
 import {
+  createColumn as createColumnRequest,
+  createTask as createTaskRequest,
   createWorkspace,
+  deleteColumn as deleteColumnRequest,
+  deleteTask as deleteTaskRequest,
   getWorkspaces,
+  getUserByName,
   deleteWorkspace as deleteWorkspaceRequest,
+  updateColumn as updateColumnRequest,
+  updateTask as updateTaskRequest,
   updateWorkspace as updateWorkspaceRequest,
 } from '../utils/api';
 
@@ -37,9 +44,17 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
   },
 
   addWorkspace: async (title: string): Promise<void> => {
+    const currentUser = localStorage.getItem('user');
+    if (!currentUser) {
+      throw new Error('User is not logged in');
+    }
+    const user = await getUserByName(currentUser);
+    if (!user?.id) {
+      throw new Error('User does not exist in database');
+    }
     const createdWorkspace = await createWorkspace({
       title,
-      userId: '11111111-1111-1111-1111-111111111111',
+      userId: user.id,
     });
     set((state) => ({
       workspaces: [...state.workspaces, createdWorkspace],
@@ -71,7 +86,8 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
     }));
   },
   //COLUMNS
-  addColumn: (workspaceId: string, title: string): void => {
+  addColumn: async (workspaceId: string, title: string): Promise<void> => {
+    const createdColumn = await createColumnRequest({ title, workspaceId });
     set((state) => ({
       workspaces: state.workspaces.map((workspace) =>
         workspace.id === workspaceId
@@ -79,11 +95,7 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
               ...workspace,
               columns: [
                 ...workspace.columns,
-                {
-                  id: crypto.randomUUID(),
-                  title,
-                  tasks: [],
-                },
+                { ...createdColumn, tasks: [] },
               ],
             }
           : workspace,
@@ -91,11 +103,12 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
     }));
   },
 
-  updateColumn: (
+  updateColumn: async (
     workspaceId: string,
     columnId: string,
     newTitle: string,
-  ): void => {
+  ): Promise<void> => {
+    await updateColumnRequest(columnId, newTitle);
     set((state) => ({
       workspaces: state.workspaces.map((workspace) =>
         workspace.id === workspaceId
@@ -112,7 +125,8 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
     }));
   },
 
-  deleteColumn: (workspaceId: string, columnId: string): void => {
+  deleteColumn: async (workspaceId: string, columnId: string): Promise<void> => {
+    await deleteColumnRequest(columnId);
     set((state) => ({
       workspaces: state.workspaces.map((workspace) =>
         workspace.id === workspaceId
@@ -128,7 +142,12 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
   },
 
   //TASKS
-  addTask: (workspaceId: string, columnId: string, title: string): void => {
+  addTask: async (
+    workspaceId: string,
+    columnId: string,
+    title: string,
+  ): Promise<void> => {
+    const createdTask = await createTaskRequest({ title, columnId });
     set((state) => ({
       workspaces: state.workspaces.map((workspace) =>
         workspace.id === workspaceId
@@ -140,10 +159,7 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
                       ...column,
                       tasks: [
                         ...column.tasks,
-                        {
-                          id: crypto.randomUUID(),
-                          title,
-                        },
+                        createdTask,
                       ],
                     }
                   : column,
@@ -154,12 +170,13 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
     }));
   },
 
-  updateTask: (
+  updateTask: async (
     workspaceId: string,
     columnId: string,
     taskId: string,
     newTitle: string,
-  ): void => {
+  ): Promise<void> => {
+    await updateTaskRequest(taskId, newTitle);
     set((state) => ({
       workspaces: state.workspaces.map((workspace) =>
         workspace.id === workspaceId
@@ -183,7 +200,12 @@ export const useWorkspacesStore = create<WorkspacesState>((set, get) => ({
     }));
   },
 
-  deleteTask: (workspaceId: string, columnId: string, taskId: string): void => {
+  deleteTask: async (
+    workspaceId: string,
+    columnId: string,
+    taskId: string,
+  ): Promise<void> => {
+    await deleteTaskRequest(taskId);
     set((state) => ({
       workspaces: state.workspaces.map((workspace) =>
         workspace.id === workspaceId
