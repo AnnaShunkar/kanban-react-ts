@@ -2,15 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { randomUUID } from 'crypto';
+import { Logger } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from '../../database/entities';
+import { KafkaEventsService } from '../kafka/kafka-events.service';
 
 @Injectable()
 export class TasksService {
+  private readonly logger: Logger = new Logger(TasksService.name);
+
   constructor(
     @InjectRepository(Task)
     private readonly tasksRepository: Repository<Task>,
+    private readonly kafkaEventsService: KafkaEventsService,
   ) {}
 
   async findAll() {
@@ -29,7 +34,19 @@ export class TasksService {
       title: createTaskDto.title,
       columnId: createTaskDto.columnId,
     });
-    return this.tasksRepository.save(task);
+    const savedTask = await this.tasksRepository.save(task);
+    try {
+      await this.kafkaEventsService.publishTaskCreatedEvent({
+        id: savedTask.id,
+        title: savedTask.title,
+        columnId: savedTask.columnId,
+        createdAt: new Date().toISOString(),
+      });
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown Kafka publish error';
+      this.logger.error(`Failed to publish task.created event: ${errorMessage}`);
+    }
+    return savedTask;
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto) {

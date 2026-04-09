@@ -1,0 +1,373 @@
+---
+description: Definitive guidelines for building robust, secure, and efficient Stripe integrations using modern API practices (v2, Checkout Sessions, Payment Intents, Elements) and essential safeguards like idempotency and webhook verification.
+globs: **/*
+alwaysApply: false
+---
+
+# Stripe Best Practices
+
+This guide outlines the definitive best practices for integrating Stripe into our applications. Adhere to these rules to ensure secure, performant, and maintainable payment flows. Always target the latest Stripe API version (`2025-12-15.clover` as of this writing) and keep SDKs up-to-date.
+
+## 1. Code Organization & Structure
+
+### 1.1. Secure API Key Management
+
+Never hardcode API keys. Store them securely in environment variables.
+
+```javascript
+// ❌ BAD
+const stripe = require('stripe')('sk_test_YOUR_SECRET_KEY');
+```
+
+```javascript
+// ✅ GOOD
+// .env
+// STRIPE_SECRET_KEY=sk_test_YOUR_SECRET_KEY
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+```
+
+### 1.2. Stripe Client Initialization
+
+Initialize the Stripe client once per process or module. Avoid re-initializing on every request to prevent resource overhead.
+
+```javascript
+// ✅ GOOD (Node.js example)
+// lib/stripe-client.js
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2025-12-15',
+});
+module.exports = stripe;
+
+// In your service/route handler:
+const stripeClient = require('../lib/stripe-client');
+// ... use stripeClient for all API calls
+```
+
+## 2. Common Patterns & Anti-patterns
+
+### 2.1. Modern Checkout Flows
+
+Always use Stripe Checkout Sessions or Payment Intents with Stripe Elements for UI. These handle complex authentication, multi-currency, and compliance automatically, significantly reducing your PCI scope.
+
+```javascript
+// ❌ BAD: Building custom card input fields and handling raw card data directly
+// Avoid handling raw card data on your server
+const charge = await stripe.charges.create({ /* ... */ });
+```
+
+```javascript
+// ✅ GOOD: Use Checkout Sessions for hosted pages
+const session = await stripe.checkout.sessions.create({
+  line_items: [{ price: 'price_123', quantity: 1 }],
+  mode: 'payment',
+  success_url: 'https://example.com/success',
+  cancel_url: 'https://example.com/cancel',
+});
+// Redirect user to session.url
+```
+
+```javascript
+// ✅ GOOD: Use Payment Intents + Elements for custom UI
+const paymentIntent = await stripe.paymentIntents.create({
+  amount: 1000,
+  currency: 'usd',
+  automatic_payment_methods: { enabled: true },
+});
+// Send paymentIntent.client_secret to frontend to use with Stripe Elements
+```
+
+### 2.2. Idempotency for Write Operations
+
+Always include a unique `Idempotency-Key` header for all write requests (for example: creating payment intents, customers, refunds). This prevents duplicate operations during network retries.
+
+```javascript
+// ❌ BAD
+await stripe.paymentIntents.create({ amount: 1000, currency: 'usd' });
+```
+
+```javascript
+// ✅ GOOD: Generate a stable, unique key per request
+const { v4: uuidv4 } = require('uuid');
+await stripe.paymentIntents.create(
+  { amount: 1000, currency: 'usd' },
+  { idempotencyKey: uuidv4() },
+);
+```
+
+### 2.3. Metadata for Traceability
+
+Attach relevant metadata to Stripe objects for easier debugging, reconciliation, and integration with internal business logic.
+
+```javascript
+// ✅ GOOD
+await stripe.paymentIntents.create({
+  amount: 2000,
+  currency: 'usd',
+  metadata: {
+    order_id: 'ORDER-XYZ-123',
+    user_id: 'user_abc',
+    product_sku: 'PROD-001',
+  },
+});
+```
+
+### 2.4. API Versioning
+
+Pin your API version in Stripe client initialization and for webhook endpoints. Regularly upgrade to benefit from new features and security patches, testing thoroughly.
+
+```javascript
+// ❌ BAD: Relying on Stripe default API version
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+```
+
+```javascript
+// ✅ GOOD: Explicitly set apiVersion
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2025-12-15',
+});
+// Ensure webhook endpoints also use this version in Dashboard
+```
+
+## 3. Error Handling
+
+### 3.1. Catch Specific Stripe Errors
+
+Handle Stripe error subclasses to provide precise feedback and implement appropriate retry logic. Always log the request ID.
+
+```javascript
+// ✅ GOOD
+try {
+  await stripe.paymentIntents.confirm(paymentIntentId);
+} catch (error) {
+  if (error.type === 'StripeCardError') {
+    console.error(`Card declined: ${error.message} (Code: ${error.code}, Req ID: ${error.requestId})`);
+  } else if (error.type === 'StripeInvalidRequestError') {
+    console.error(`Invalid request: ${error.message} (Param: ${error.param}, Req ID: ${error.requestId})`);
+  } else {
+    console.error(`Generic Stripe error: ${error.message} (Req ID: ${error.requestId})`);
+  }
+}
+```
+
+### 3.2. Webhook-Driven Error Handling
+
+For asynchronous outcomes (for example, delayed failures), rely on webhooks. Your server must be the source of truth for payment status.
+
+```javascript
+// ✅ GOOD
+app.post('/webhook', async (req, res) => {
+  // Verify Stripe signature before trusting payload
+  const signature = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (error) {
+    console.error(`Webhook signature verification failed: ${error.message}`);
+    return res.status(400).send('Invalid signature');
+  }
+  if (event.type === 'payment_intent.payment_failed') {
+    const paymentIntent = event.data.object;
+    console.error(`Payment Intent ${paymentIntent.id} failed: ${paymentIntent.last_payment_error?.message}`);
+    // Update order state in DB and notify customer
+  }
+  return res.status(200).send('ok');
+});
+```
+
+## 4. Security & Compliance Essentials
+
+### 4.1. Verify Webhook Signatures
+
+Always verify webhook signatures using the endpoint secret. Never trust raw webhook payloads without verification.
+
+### 4.2. Keep Secrets Server-Side
+
+Never expose `STRIPE_SECRET_KEY` to client-side code. Client code should only receive publishable keys and short-lived client secrets.
+
+### 4.3. Minimize PCI Scope
+
+Use Stripe-hosted or Stripe Elements-based flows. Do not store, process, or transmit raw card data through your servers.
+
+## 5. Operational Excellence
+
+### 5.1. Log Correlation Data
+
+Log Stripe `requestId`, payment intent IDs, and internal order IDs together to simplify incident response and support.
+
+### 5.2. Retry Strategy
+
+Retry only transient failures with backoff, and always combine retries with idempotency keys.
+
+### 5.3. Keep SDKs Updated
+
+Update Stripe SDKs regularly and test API version upgrades in staging before production rollout.
+---
+description: Definitive guidelines for building robust, secure, and efficient Stripe integrations using modern API practices (v2, Checkout Sessions, Payment Intents, Elements) and essential safeguards like idempotency and webhook verification.
+globs: **/*
+alwaysApply: false
+---
+
+# Stripe Best Practices
+
+This guide outlines the definitive best practices for integrating Stripe into our applications. Adhere to these rules to ensure secure, performant, and maintainable payment flows. Always target the latest Stripe API version (`2025-12-15.clover` as of this writing) and keep SDKs up-to-date.
+
+## 1. Code Organization & Structure
+
+### 1.1. Secure API Key Management
+
+Never hardcode API keys. Store them securely in environment variables.
+
+```javascript
+// ❌ BAD:
+const stripe = require('stripe')('sk_test_YOUR_SECRET_KEY');
+```
+
+```javascript
+// ✅ GOOD:
+// .env
+// STRIPE_SECRET_KEY=sk_test_YOUR_SECRET_KEY
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+```
+
+### 1.2. Stripe Client Initialization
+
+Initialize the Stripe client once per process or module. Avoid re-initializing on every request to prevent resource overhead.
+
+```javascript
+// ✅ GOOD (Node.js example):
+// lib/stripeClient.js
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2025-12-15',
+});
+module.exports = stripe;
+
+// In your service/route handler:
+const stripeClient = require('../lib/stripeClient');
+// ... use stripeClient for all API calls
+```
+
+## 2. Common Patterns & Anti-patterns
+
+### 2.1. Modern Checkout Flows
+
+Always use Stripe Checkout Sessions or Payment Intents with Stripe Elements for UI. These handle complex authentication, multi-currency, and compliance automatically, significantly reducing your PCI scope.
+
+```javascript
+// ❌ BAD: Building custom card input fields and handling raw card data directly on your server.
+// Avoid handling raw card data on your server
+const charge = await stripe.charges.create({ /* ... */ });
+```
+
+```javascript
+// ✅ GOOD: Use Checkout Sessions for pre-built, hosted pages, or Payment Intents + Elements for custom UI.
+// Server-side (Checkout Session example)
+const session = await stripe.checkout.sessions.create({
+  line_items: [{ price: 'price_123', quantity: 1 }],
+  mode: 'payment',
+  success_url: 'https://example.com/success',
+  cancel_url: 'https://example.com/cancel',
+});
+// Redirect user to session.url
+
+// Server-side (Payment Intent example for custom UI)
+const paymentIntent = await stripe.paymentIntents.create({
+  amount: 1000,
+  currency: 'usd',
+  automatic_payment_methods: { enabled: true },
+});
+// Send paymentIntent.client_secret to frontend to use with Stripe Elements
+```
+
+### 2.2. Idempotency for Write Operations
+
+Always include a unique Idempotency-Key header for all write requests (e.g., creating charges, customers, refunds). This prevents duplicate operations during network retries.
+
+```javascript
+// ❌ BAD:
+await stripe.paymentIntents.create({ amount: 1000, currency: 'usd' });
+```
+
+```javascript
+// ✅ GOOD: Generate a stable, unique key per request (e.g., UUID, or a hash of request parameters + user ID).
+const { v4: uuidv4 } = require('uuid');
+// ...
+await stripe.paymentIntents.create(
+  { amount: 1000, currency: 'usd' },
+  { idempotencyKey: uuidv4() },
+);
+```
+
+### 2.3. Metadata for Traceability
+
+Attach relevant metadata to Stripe objects (charges, customers, Payment Intents) for easier debugging, reconciliation, and integrating with internal business logic.
+
+```javascript
+// ✅ GOOD:
+await stripe.paymentIntents.create({
+  amount: 2000,
+  currency: 'usd',
+  metadata: {
+    order_id: 'ORDER-XYZ-123',
+    user_id: 'user_abc',
+    product_sku: 'PROD-001',
+  },
+});
+```
+
+### 2.4. API Versioning
+
+Pin your API version in the Stripe client initialization and for webhook endpoints. Regularly upgrade to benefit from new features and security patches, testing thoroughly.
+
+```javascript
+// ❌ BAD: Relying on Stripe's default API version, which might change unexpectedly.
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+```
+
+```javascript
+// ✅ GOOD: Explicitly set the apiVersion.
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2025-12-15',
+});
+// Ensure webhook endpoints also use this version in the Dashboard
+```
+
+## 3. Error Handling
+
+### 3.1. Catch Specific Stripe Errors
+
+Handle different StripeError subclasses to provide precise feedback to users and implement appropriate retry logic. Always log the requestId.
+
+```javascript
+// ✅ GOOD:
+try {
+  await stripe.paymentIntents.confirm(paymentIntentId);
+} catch (e) {
+  if (e.type === 'StripeCardError') {
+    console.error(`Card declined: ${e.message} (Code: ${e.code}, Req ID: ${e.requestId})`);
+    // Inform user, prompt for new card
+  } else if (e.type === 'StripeInvalidRequestError') {
+    console.error(`Invalid request: ${e.message} (Param: ${e.param}, Req ID: ${e.requestId})`);
+    // Log, alert dev team for code fix
+  } else {
+    console.error(`Generic Stripe error: ${e.message} (Req ID: ${e.requestId})`);
+    // Log, alert dev team, potentially retry for transient errors
+  }
+}
+```
+
+### 3.2. Webhook-Driven Error Handling
+
+For asynchronous events (e.g., payment failures after initial confirmation), rely on webhooks. Your server should be the source of truth for payment status updates.
+
+```javascript
+// ✅ GOOD:
+// In your webhook handler for 'payment_intent.payment_failed'
+app.post('/webhook', async (req, res) => { /* ... signature verification ... */
+  if (event.type === 'payment_intent.payment_failed') {
+    const paymentIntent = event.data.object;
+    console.error(`Payment Intent ${paymentIntent.id} failed: ${paymentIntent.last_payment_error?.message}`);
+    // Update order status in DB, notify customer, trigger internal recovery flow
+  }
+  res.status(200).send();
+});
+```
